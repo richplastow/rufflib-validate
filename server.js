@@ -62,7 +62,7 @@ server.listen(port, hostname, () =>
     console.log(`Serving ${dir}/ at http://${hostname}:${port}/`)
 );
 
-// Open a Browser Window, if the '--open' or '-o' command line option was set.
+// Open a browser window, if the '--open' or '-o' command line option was set.
 // Visit 'run-browser-tests.html', if the '--test' or '-t' option was set, or
 // otherwise visit 'index.html'.
 // Based on https://stackoverflow.com/a/49013356

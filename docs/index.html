@@ -25,11 +25,17 @@
         .btn{padding:4px 9px;background:#fff}
         .btn{border-right:8px solid #f00;border-left:8px solid #0ff}
         img{width:256px;height:256px}
+        section{margin:40px 0}
+        section h3{margin:9px 0;padding:7px;color:rgb(42, 161, 152);font-family:Verdana,Arial}
+        pre{width:300px;margin:0 auto;text-align:left}
+        code{font-size:9px;}
+        @media screen and (min-width:450px){
+            section h4,pre{width:450px}code{font-size:13px}
+        }
     </style>
 </head>
 <body>
     <nav><a class="btn" href="/rufflib">Home</a></nav>
-    <p>C O M I N G &nbsp; S O O N</p>
     <img src="./img/icon/rufflib-v1-256x256.gif" alt="RuffLIB Logo">
     <h1>V A L I D A T E</h1>
     <h3>
@@ -42,6 +48,25 @@
         <b>Version:</b> 0.0.1<br>
         <b>Repo:</b> <a href="https://github.com/richplastow/rufflib-validate">https://github.com/richplastow/rufflib-validate</a><br>
         <b>Homepage:</b> <a href="https://richplastow.com/rufflib-validate">https://richplastow.com/rufflib-validate</a><br>
+        <b>Tests:</b> <a href="run-browser-tests.html">run-browser-tests.html</a><br>
     </aside>
+
+    <!-- from https://codebeautify.org/code-highlighter set to Solarized Dark -->
+    <section style="background-color:rgb(0, 43, 54);background:rgb(0, 43, 54);">
+<pre>
+<h3>Typical usage:</h3><code id="htmlViewer" style="color:rgb(131, 148, 150); font-weight:400;background-color:rgb(0, 43, 54);background:rgb(0, 43, 54);display:block;padding: .5em;"><span style="color:rgb(133, 153, 0); font-weight:400;">import</span> Validate <span style="color:rgb(133, 153, 0); font-weight:400;">from</span> <span style="color:rgb(42, 161, 152); font-weight:400;">&#x27;rufflib-validate&#x27;</span>;
+
+<span style="color:rgb(131, 148, 150); font-weight:400;"><span style="color:rgb(133, 153, 0); font-weight:400;">function</span> <span style="color:rgb(38, 139, 210); font-weight:400;">sayOk</span>(<span style="color:rgb(131, 148, 150); font-weight:400;">n, allowInvalid</span>) </span>{
+    <span style="color:rgb(133, 153, 0); font-weight:400;">const</span> v = <span style="color:rgb(133, 153, 0); font-weight:400;">new</span> Validate(<span style="color:rgb(42, 161, 152); font-weight:400;">&#x27;sayOk()&#x27;</span>, allowInvalid);
+    <span style="color:rgb(133, 153, 0); font-weight:400;">if</span> (!v.number(n, <span style="color:rgb(42, 161, 152); font-weight:400;">&#x27;n&#x27;</span>, <span style="color:rgb(42, 161, 152); font-weight:400;">100</span>)) <span style="color:rgb(133, 153, 0); font-weight:400;">return</span> v.err;
+    <span style="color:rgb(133, 153, 0); font-weight:400;">return</span> <span style="color:rgb(42, 161, 152); font-weight:400;">&#x27;ok!&#x27;</span>;
+}
+
+sayOk(<span style="color:rgb(42, 161, 152); font-weight:400;">123</span>); <span style="color:rgb(88, 110, 117); font-weight:400;">// ok!</span>
+sayOk(<span style="color:rgb(42, 161, 152); font-weight:400;">null</span>); <span style="color:rgb(88, 110, 117); font-weight:400;">// sayOk(): &#x27;n&#x27; is null not type &#x27;number&#x27;</span>
+sayOk(<span style="color:rgb(42, 161, 152); font-weight:400;">3</span>); <span style="color:rgb(88, 110, 117); font-weight:400;">// &#x27;n&#x27; 3 is &lt; 100</span>
+sayOk(<span style="color:rgb(42, 161, 152); font-weight:400;">3</span>, <span style="color:rgb(42, 161, 152); font-weight:400;">true</span>); <span style="color:rgb(88, 110, 117); font-weight:400;">// ok! (less safe, but faster)</span></code>
+</pre></section><br>
+
 </body>
 </html>
