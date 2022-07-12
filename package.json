@@ -1,0 +1,27 @@
+{
+    "name": "rufflib-validate",
+    "version": "0.0.1",
+    "description": "A RuffLIB library for succinctly validating JavaScript values.",
+    "main": "docs/dist/rufflib-validate.es.js",
+    "type": "module",
+    "scripts": {
+        "build": "rollup -c",
+        "test:docs": "node docs/run-nodejs-tests.js # test docs/ using NodeJS",
+        "test:src": "node src/run-nodejs-tests.js # test src/ using NodeJS",
+        "test": "[ -z $npm_config_src ]&&D=docs||D=src;npm run test:$D"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/richplastow/rufflib-validate.git"
+    },
+    "author": "rich@richplastow.com",
+    "license": "MIT",
+    "homepage": "https://richplastow.com/rufflib-validate",
+    "devDependencies": {
+        "@babel/preset-env": "^7.18.6",
+        "@rollup/plugin-babel": "^5.3.1",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "rufflib-expect": "^1.0.0"
+    }
+}
