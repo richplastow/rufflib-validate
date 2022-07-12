@@ -1,5 +1,5 @@
 /**
- * Unit tests for rufflib-validate 0.0.1
+ * Unit tests for rufflib-validate 1.0.0
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -1317,7 +1317,7 @@ function test$1(xp, Validate) {
 
 /* --------------------------------- Import --------------------------------- */
 
-const VERSION = '0.0.1';
+const VERSION = '1.0.0';
 
 
 /* ---------------------------------- Tests --------------------------------- */

@@ -1,6 +1,6 @@
 {
     "name": "rufflib-validate",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "A RuffLIB library for succinctly validating JavaScript values.",
     "main": "docs/dist/rufflib-validate.es.js",
     "type": "module",
@@ -10,6 +10,14 @@
         "test:src": "node src/run-nodejs-tests.js # test src/ using NodeJS",
         "test": "[ -z $npm_config_src ]&&D=docs||D=src;npm run test:$D"
     },
+    "keywords": [
+        "RuffLIB",
+        "vanilla",
+        "javascript",
+        "validate",
+        "data-validation",
+        "schema-validation"
+    ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/richplastow/rufflib-validate.git"
