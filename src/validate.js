@@ -5,7 +5,7 @@
 
 /* --------------------------------- Import --------------------------------- */
 
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 import _type from './methods/_type.js';
 import _validateAgainstSchema from './methods/_validate-against-schema.js';
@@ -66,38 +66,39 @@ Validate.prototype.string = string;
 
 // Runs basic tests on Validate.
 export function test(expect, Validate) {
-    expect().section('Validate basics');
-    expect(`typeof Validate // in JavaScript, a class is type 'function'`,
-            typeof Validate).toBe('function');
-    expect(`Validate.VERSION`,
-            Validate.VERSION).toBe(VERSION);
-    expect(`typeof new Validate()`,
-            typeof new Validate()).toBe('object');
-    expect(`new Validate()`,
-            new Validate()).toHave({
-                err:null, prefix:'(anon)', skip:false });
-    expect(`new Validate('foo()', true)`,
-            new Validate('foo()', true)).toHave({
-                err:null, prefix:'foo()', skip:true });
+    const et = expect.that;
 
+    expect.section('Validate basics');
+    et(`typeof Validate // in JavaScript, a class is type 'function'`,
+        typeof Validate).is('function');
+    et(`Validate.VERSION`,
+        Validate.VERSION).is(VERSION);
+    et(`typeof new Validate()`,
+        typeof new Validate()).is('object');
+    et(`new Validate()`,
+        new Validate()).has({
+            err:null, prefix:'(anon)', skip:false });
+    et(`new Validate('foo()', true)`,
+        new Validate('foo()', true)).has({
+            err:null, prefix:'foo()', skip:true });
 
-    expect().section('Typical usage');
+    expect.section('Typical usage');
     function sayOk(n, allowInvalid) {
         const v = new Validate('sayOk()', allowInvalid);
         if (!v.number(n, 'n', 100)) return v.err;
         return 'ok!';
     }
-    expect(`sayOk(123)`,
-            sayOk(123))
-            .toBe('ok!');
-    expect(`sayOk(null)`,
-            sayOk(null))
-            .toBe(`sayOk(): 'n' is null not type 'number'`);
-    expect(`sayOk(3)`,
-            sayOk(3))
-            .toBe(`sayOk(): 'n' 3 is < 100`);
-    expect('sayOk(3, true) // test that the `skip` argument is working',
-            sayOk(3, true)) // @TODO test that skip works with all methods
-            .toBe('ok!');
+    et(`sayOk(123)`,
+        sayOk(123))
+        .is('ok!');
+    et(`sayOk(null)`,
+        sayOk(null))
+        .is(`sayOk(): 'n' is null not type 'number'`);
+    et(`sayOk(3)`,
+        sayOk(3))
+        .is(`sayOk(): 'n' 3 is < 100`);
+    et('sayOk(3, true) // test that the `skip` argument is working',
+        sayOk(3, true)) // @TODO test that skip works with all methods
+        .is('ok!');
 
 }

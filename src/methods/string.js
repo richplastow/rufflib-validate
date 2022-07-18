@@ -76,120 +76,122 @@ export default function string(value, name, minSetOrRule, max) {
 }
 
 // Tests Validate.string()
-export function test(xp, Validate) {
-    xp().section('string()');
+export function test(expect, Validate) {
+    const et = expect.that;
+
+    expect.section('string()');
 
     const v = new Validate('str()');
     let err;
 
     // Basic ok.
-    xp(`v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet')`,
-        v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.string('', 'empty')`,
-        v.string('', 'empty')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet')`,
+        v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet')).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.string('', 'empty')`,
+        v.string('', 'empty')).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Nullish.
-    xp(`v.string()`,
-        v.string()).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): a value is type 'undefined' not 'string'`);
-    xp(`v.string(null, 'null')`,
-        v.string(null, 'null')).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'null' is null not type 'string'`);
+    et(`v.string()`,
+        v.string()).is(false);
+    et(`v.err`, v.err).is(`str(): a value is type 'undefined' not 'string'`);
+    et(`v.string(null, 'null')`,
+        v.string(null, 'null')).is(false);
+    et(`v.err`, v.err).is(`str(): 'null' is null not type 'string'`);
 
     // Basic invalid.
-    xp(`v.string(10, 'ten')`,
-        v.string(10, 'ten')).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'ten' is type 'number' not 'string'`);
-    xp(`v.string(NaN, 'NaN')`,
-        v.string(NaN, 'NaN')).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'NaN' is type 'number' not 'string'`);
-    xp(`v.string(['a'], 'array')`,
-        v.string(['a'], 'array')).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'array' is an array not type 'string'`);
-    xp(`v.string(Math, undefined)`,
-        v.string(Math, undefined)).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): a value is type 'object' not 'string'`);
+    et(`v.string(10, 'ten')`,
+        v.string(10, 'ten')).is(false);
+    et(`v.err`, v.err).is(`str(): 'ten' is type 'number' not 'string'`);
+    et(`v.string(NaN, 'NaN')`,
+        v.string(NaN, 'NaN')).is(false);
+    et(`v.err`, v.err).is(`str(): 'NaN' is type 'number' not 'string'`);
+    et(`v.string(['a'], 'array')`,
+        v.string(['a'], 'array')).is(false);
+    et(`v.err`, v.err).is(`str(): 'array' is an array not type 'string'`);
+    et(`v.string(Math, undefined)`,
+        v.string(Math, undefined)).is(false);
+    et(`v.err`, v.err).is(`str(): a value is type 'object' not 'string'`);
 
     // Set ok. @TODO maybe don’t ignore the `max` argument?
-    xp(`v.string('Foobar', undefined, ['Baz','Foobar'], 3) // max 3 is ignored`,
-        v.string('Foobar', undefined, ['Baz','Foobar'], 3)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.string('', 'blank', [''])`,
-        v.string('', 'blank', [''])).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.string('Foobar', undefined, ['Baz','Foobar'], 3) // max 3 is ignored`,
+        v.string('Foobar', undefined, ['Baz','Foobar'], 3)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.string('', 'blank', [''])`,
+        v.string('', 'blank', [''])).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Set invalid.
-    xp(`v.string('FOOBAR', 'CapsFoobar', ['Baz','Abcdefgi','Foobar'])`,
-        v.string('FOOBAR', 'CapsFoobar', ['Baz','Abcdefgi','Foobar'])).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'CapsFoobar' "FOOBAR" is not in [Baz,Abcdefg...obar]`);
-    xp(`v.string('', null, [])`,
-        v.string('', null, [])).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): string "" is not in []`);
+    et(`v.string('FOOBAR', 'CapsFoobar', ['Baz','Abcdefgi','Foobar'])`,
+        v.string('FOOBAR', 'CapsFoobar', ['Baz','Abcdefgi','Foobar'])).is(false);
+    et(`v.err`, v.err).is(`str(): 'CapsFoobar' "FOOBAR" is not in [Baz,Abcdefg...obar]`);
+    et(`v.string('', null, [])`,
+        v.string('', null, [])).is(false);
+    et(`v.err`, v.err).is(`str(): string "" is not in []`);
 
     // Rule ok. @TODO maybe don’t ignore the `max` argument?
-    xp(`v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', /[a-z]{26}/, 3) // max 3 is ignored`,
-        v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', /[a-z]{26}/, 3)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.string('Foobar', 0, {test:function(s){return s[0]==='F'}})`,
-        v.string('Foobar', 0, {test:function(s){return s[0]==='F'}})).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', /[a-z]{26}/, 3) // max 3 is ignored`,
+        v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', /[a-z]{26}/, 3)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.string('Foobar', 0, {test:function(s){return s[0]==='F'}})`,
+        v.string('Foobar', 0, {test:function(s){return s[0]==='F'}})).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Rule invalid.
-    xp(`v.string('abcdefghIJKLMNOPQRstuvwxyz', null, /[a-z]{26}/)`,
-        v.string('abcdefghIJKLMNOPQRstuvwxyz', null, /[a-z]{26}/)).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): string "abcdefghIJK...wxyz" fails /[a-z]{26}/`);
-    xp(`v.string('foobar', 'foobarLowercase', {test:function(s){return s[0]==='F'}})`,
-        v.string('foobar', 'foobarLowercase', {test:function(s){return s[0]==='F'}})).toBe(false);
-    xp(`v.err`, v.err).toMatch(/^str\(\): 'foobarLowercase' "foobar" fails function/);
+    et(`v.string('abcdefghIJKLMNOPQRstuvwxyz', null, /[a-z]{26}/)`,
+        v.string('abcdefghIJKLMNOPQRstuvwxyz', null, /[a-z]{26}/)).is(false);
+    et(`v.err`, v.err).is(`str(): string "abcdefghIJK...wxyz" fails /[a-z]{26}/`);
+    et(`v.string('foobar', 'foobarLowercase', {test:function(s){return s[0]==='F'}})`,
+        v.string('foobar', 'foobarLowercase', {test:function(s){return s[0]==='F'}})).is(false);
+    et(`v.err`, v.err).passes(/^str\(\): 'foobarLowercase' "foobar" fails function/);
 
     // Minimum ok. @TODO maybe throw an error if negative or non-integer min
-    xp(`v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', 26)`,
-        v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', 26)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.string('', null, -3)`,
-        v.string('', null, -3)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', 26)`,
+        v.string('abcdefghijklmnopqrstuvwxyz', 'alphabet', 26)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.string('', null, -3)`,
+        v.string('', null, -3)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Minimum NaN throws an error.
-    try { v.string('abc', 'abc', NaN) } catch (e) { err = `${e}` }
-    xp(`v.string('abc', 'abc', NaN)`, err)
-        .toBe('Error: Validate.string() incorrectly invoked: min is NaN!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.string() incorrectly invoked: min is NaN!');
+    try{ v.string('abc', 'abc', NaN) } catch (e) { err = `${e}` }
+    et(`v.string('abc', 'abc', NaN)`, err)
+        .is('Error: Validate.string() incorrectly invoked: min is NaN!');
+    et(`v.err`, v.err)
+        .is('Validate.string() incorrectly invoked: min is NaN!');
 
     // Minimum invalid.
-    xp(`v.string('abc', null, 4)`,
-        v.string('abc', null, 4)).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): string length 3 is < 4`);
-    xp(`v.string('', 'blank', 0.1)`,
-        v.string('', 'blank', 0.1)).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'blank' length 0 is < 0.1`);
+    et(`v.string('abc', null, 4)`,
+        v.string('abc', null, 4)).is(false);
+    et(`v.err`, v.err).is(`str(): string length 3 is < 4`);
+    et(`v.string('', 'blank', 0.1)`,
+        v.string('', 'blank', 0.1)).is(false);
+    et(`v.err`, v.err).is(`str(): 'blank' length 0 is < 0.1`);
 
     // Maximum ok. @TODO maybe throw an error if max > min, or negative or non-integer max
-    xp(`v.string('abc', /name-is-ignored/, 3, 3)`,
-        v.string('abc', /name-is-ignored/, 3, 3)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.string('10', 'ten', null, 55.555)`,
-        v.string('10', 'ten', null, 55.555)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.string('', 'blank', -1.23, -0) // note JavaScript supports negative zero`,
-        v.string('', 'blank', -1.23, -0)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.string('abc', /name-is-ignored/, 3, 3)`,
+        v.string('abc', /name-is-ignored/, 3, 3)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.string('10', 'ten', null, 55.555)`,
+        v.string('10', 'ten', null, 55.555)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.string('', 'blank', -1.23, -0) // note JavaScript supports negative zero`,
+        v.string('', 'blank', -1.23, -0)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Maximum NaN throws an error.
-    try { v.string('10', 'tenStr', 2, NaN) } catch (e) { err = `${e}` }
-    xp(`v.string('10', 'tenStr', 2, NaN)`, err)
-        .toBe('Error: Validate.string() incorrectly invoked: max is NaN!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.string() incorrectly invoked: max is NaN!');
+    try{ v.string('10', 'tenStr', 2, NaN) } catch (e) { err = `${e}` }
+    et(`v.string('10', 'tenStr', 2, NaN)`, err)
+        .is('Error: Validate.string() incorrectly invoked: max is NaN!');
+    et(`v.err`, v.err)
+        .is('Validate.string() incorrectly invoked: max is NaN!');
 
     // Maximum invalid.
-    xp(`v.string('abc', null, 3, 2)`,
-        v.string('abc', null, 3, 2)).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): string length 3 is > 2`);
-    xp(`v.string('', 'blank', -0.2, -0.1)`,
-        v.string('', 'blank', -0.2, -0.1)).toBe(false);
-    xp(`v.err`, v.err).toBe(`str(): 'blank' length 0 is > -0.1`);
+    et(`v.string('abc', null, 3, 2)`,
+        v.string('abc', null, 3, 2)).is(false);
+    et(`v.err`, v.err).is(`str(): string length 3 is > 2`);
+    et(`v.string('', 'blank', -0.2, -0.1)`,
+        v.string('', 'blank', -0.2, -0.1)).is(false);
+    et(`v.err`, v.err).is(`str(): 'blank' length 0 is > -0.1`);
 }

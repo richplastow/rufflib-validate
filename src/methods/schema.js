@@ -206,174 +206,176 @@ function getIs(value) {
 /* ---------------------------------- Tests --------------------------------- */
 
 // Tests Validate.schema().
-export function test(xp, Validate) {
-    xp().section('schema()');
+export function test(expect, Validate) {
+    const et = expect.that;
+
+    expect.section('schema()');
 
     const v = new Validate('sma()');
 
     // Basic ok.
-    xp(`v.schema({_meta:{}}, 'empty')`,
-        v.schema({_meta:{}}, 'empty')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.schema({_meta:{}}, 'empty')`,
+        v.schema({_meta:{}}, 'empty')).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Basic invalid.
-    xp(`v.schema(100, 'hundred')`,
-        v.schema(100, 'hundred')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'hundred' is type 'number' not an object`);
-    xp(`v.schema([1,2,3])`,
-        v.schema([1,2,3])).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): unnamed schema is an array not an object`);
+    et(`v.schema(100, 'hundred')`,
+        v.schema(100, 'hundred')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'hundred' is type 'number' not an object`);
+    et(`v.schema([1,2,3])`,
+        v.schema([1,2,3])).is(false);
+    et(`v.err`, v.err).is(`sma(): unnamed schema is an array not an object`);
 
     // Nullish.
-    xp(`v.schema(undefined, 'undef')`,
-        v.schema(undefined, 'undef')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'undef' is type 'undefined' not an object`);
-    xp(`v.schema(null, 'empty')`,
-        v.schema(null, 'empty')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'empty' is null not an object`);
-    xp(`v.schema(null)`,
-        v.schema(null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): unnamed schema is null not an object`);
-    xp(`v.schema([], 'emptyArray')`,
-        v.schema([], 'emptyArray')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'emptyArray' is an array not an object`);
+    et(`v.schema(undefined, 'undef')`,
+        v.schema(undefined, 'undef')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'undef' is type 'undefined' not an object`);
+    et(`v.schema(null, 'empty')`,
+        v.schema(null, 'empty')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'empty' is null not an object`);
+    et(`v.schema(null)`,
+        v.schema(null)).is(false);
+    et(`v.err`, v.err).is(`sma(): unnamed schema is null not an object`);
+    et(`v.schema([], 'emptyArray')`,
+        v.schema([], 'emptyArray')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'emptyArray' is an array not an object`);
 
     // Schema invalid, basic property errors.
-    xp(`v.schema({}, 's')`,
-        v.schema({}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's._meta' is type 'undefined' not an object`);
-    xp(`v.schema({_meta:[]})`,
-        v.schema({_meta:[]})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): unnamed schema '._meta' is an array not an object`);
-    xp(`v.schema({_meta:null}, 's')`,
-        v.schema({_meta:null}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's._meta' is null not an object`);
-    xp(`v.schema({_meta:{},foo:{_meta:123}}, 'MY_SCHEMA')`,
-        v.schema({_meta:{},foo:{_meta:123}}, 'MY_SCHEMA')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'MY_SCHEMA.foo._meta' is type 'number' not an object`);
-    xp(`v.schema({_meta:{},foo:{_meta:[1,2,3]}}, undefined)`,
-        v.schema({_meta:{},foo:{_meta:[1,2,3]}}, undefined)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'foo._meta' of the schema is an array not an object`);
-    xp(`v.schema({_meta:null})`,
-        v.schema({_meta:null})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): unnamed schema '._meta' is null not an object`);
-    xp(`v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})`,
-        v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'c.e._meta' of the schema is an array not an object`);
-    xp(`v.schema({a:1, _meta:{}}, 'schema')`,
-        v.schema({a:1, _meta:{}}, 'schema')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'schema.a' is type 'number' not an object`);
-    xp(`v.schema({a:null, _meta:{}}, null)`,
-        v.schema({a:null, _meta:{}}, null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'a' of the schema is null not an object`);
-    xp(`v.schema({a:{_meta:true}, _meta:{}}, 's')`,
-        v.schema({a:{_meta:true}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.a._meta' is type 'boolean' not an object`);
-    xp(`v.schema({Foo:{_meta:[]}, _meta:{}}, 's')`,
-        v.schema({Foo:{_meta:[]}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.Foo._meta' is an array not an object`);
-    xp(`v.schema({num:{}, _meta:{}}, 's')`,
-        v.schema({num:{}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.num.kind' not recognised`);
-    xp(`v.schema({num:{kind:123}, _meta:{}})`,
-        v.schema({num:{kind:123}, _meta:{}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'num.kind' of the schema not recognised`);
-    xp(`v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')`,
-        v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.outer.inner.kind' not recognised`);
+    et(`v.schema({}, 's')`,
+        v.schema({}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's._meta' is type 'undefined' not an object`);
+    et(`v.schema({_meta:[]})`,
+        v.schema({_meta:[]})).is(false);
+    et(`v.err`, v.err).is(`sma(): unnamed schema '._meta' is an array not an object`);
+    et(`v.schema({_meta:null}, 's')`,
+        v.schema({_meta:null}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's._meta' is null not an object`);
+    et(`v.schema({_meta:{},foo:{_meta:123}}, 'MY_SCHEMA')`,
+        v.schema({_meta:{},foo:{_meta:123}}, 'MY_SCHEMA')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'MY_SCHEMA.foo._meta' is type 'number' not an object`);
+    et(`v.schema({_meta:{},foo:{_meta:[1,2,3]}}, undefined)`,
+        v.schema({_meta:{},foo:{_meta:[1,2,3]}}, undefined)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'foo._meta' of the schema is an array not an object`);
+    et(`v.schema({_meta:null})`,
+        v.schema({_meta:null})).is(false);
+    et(`v.err`, v.err).is(`sma(): unnamed schema '._meta' is null not an object`);
+    et(`v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})`,
+        v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'c.e._meta' of the schema is an array not an object`);
+    et(`v.schema({a:1, _meta:{}}, 'schema')`,
+        v.schema({a:1, _meta:{}}, 'schema')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'schema.a' is type 'number' not an object`);
+    et(`v.schema({a:null, _meta:{}}, null)`,
+        v.schema({a:null, _meta:{}}, null)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'a' of the schema is null not an object`);
+    et(`v.schema({a:{_meta:true}, _meta:{}}, 's')`,
+        v.schema({a:{_meta:true}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.a._meta' is type 'boolean' not an object`);
+    et(`v.schema({Foo:{_meta:[]}, _meta:{}}, 's')`,
+        v.schema({Foo:{_meta:[]}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.Foo._meta' is an array not an object`);
+    et(`v.schema({num:{}, _meta:{}}, 's')`,
+        v.schema({num:{}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.num.kind' not recognised`);
+    et(`v.schema({num:{kind:123}, _meta:{}})`,
+        v.schema({num:{kind:123}, _meta:{}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'num.kind' of the schema not recognised`);
+    et(`v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')`,
+        v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.outer.inner.kind' not recognised`);
 
     // Schema invalid, value properties are never allowed to be `null`.
-    xp(`v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')`,
-        v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.BOOL.fallback' is null`);
-    xp(`v.schema({n:{max:null,kind:'number'}, _meta:{}}))`,
-        v.schema({n:{max:null,kind:'number'}, _meta:{}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'n.max' of the schema is null`);
-    xp(`v.schema({n:{min:null,kind:'number'}, _meta:{}}, 's')`,
-        v.schema({n:{min:null,kind:'number'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.n.min' is null`);
-    xp(`v.schema({n:{rule:null,kind:'number'}, _meta:{}}, 0)`,
-        v.schema({n:{rule:null,kind:'number'}, _meta:{}}, 0)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'n.rule' of the schema is null`);
-    xp(`v.schema({n:{set:null,kind:'number'}, _meta:{}}, 's')`,
-        v.schema({n:{set:null,kind:'number'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.n.set' is null`);
+    et(`v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')`,
+        v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.BOOL.fallback' is null`);
+    et(`v.schema({n:{max:null,kind:'number'}, _meta:{}}))`,
+        v.schema({n:{max:null,kind:'number'}, _meta:{}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'n.max' of the schema is null`);
+    et(`v.schema({n:{min:null,kind:'number'}, _meta:{}}, 's')`,
+        v.schema({n:{min:null,kind:'number'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.n.min' is null`);
+    et(`v.schema({n:{rule:null,kind:'number'}, _meta:{}}, 0)`,
+        v.schema({n:{rule:null,kind:'number'}, _meta:{}}, 0)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'n.rule' of the schema is null`);
+    et(`v.schema({n:{set:null,kind:'number'}, _meta:{}}, 's')`,
+        v.schema({n:{set:null,kind:'number'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.n.set' is null`);
 
     // Schema invalid, only 0 or 1 qualifiers allowed.
-    xp(`v.schema({str:{max:1,rule:1,kind:'string'}, _meta:{}}, 's')`,
-        v.schema({str:{max:1,rule:1,kind:'string'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.str' has '2' qualifiers, only 0 or 1 allowed`);
-    xp(`v.schema({str:{min:1,set:1,kind:'string'}, _meta:{}}, undefined)`,
-        v.schema({str:{min:1,set:1,kind:'string'}, _meta:{}}, undefined)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'str' of the schema has '2' qualifiers, only 0 or 1 allowed`);
-    xp(`v.schema({str:{min:1,max:1,set:1,kind:'string'}, _meta:{}}, 's')`,
-        v.schema({str:{min:1,max:1,set:1,kind:'string'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.str' has '3' qualifiers, only 0 or 1 allowed`);
-    xp(`v.schema({str:{min:1,max:1,rule:1,set:1,kind:'string'}, _meta:{}})`,
-        v.schema({str:{min:1,max:1,rule:1,set:1,kind:'string'}, _meta:{}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'str' of the schema has '4' qualifiers, only 0 or 1 allowed`);
+    et(`v.schema({str:{max:1,rule:1,kind:'string'}, _meta:{}}, 's')`,
+        v.schema({str:{max:1,rule:1,kind:'string'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.str' has '2' qualifiers, only 0 or 1 allowed`);
+    et(`v.schema({str:{min:1,set:1,kind:'string'}, _meta:{}}, undefined)`,
+        v.schema({str:{min:1,set:1,kind:'string'}, _meta:{}}, undefined)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'str' of the schema has '2' qualifiers, only 0 or 1 allowed`);
+    et(`v.schema({str:{min:1,max:1,set:1,kind:'string'}, _meta:{}}, 's')`,
+        v.schema({str:{min:1,max:1,set:1,kind:'string'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.str' has '3' qualifiers, only 0 or 1 allowed`);
+    et(`v.schema({str:{min:1,max:1,rule:1,set:1,kind:'string'}, _meta:{}})`,
+        v.schema({str:{min:1,max:1,rule:1,set:1,kind:'string'}, _meta:{}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'str' of the schema has '4' qualifiers, only 0 or 1 allowed`);
 
     // Schema invalid, boolean.
-    xp(`v.schema({BOOL:{fallback:0,kind:'boolean'}, _meta:{}}, 's')`,
-        v.schema({BOOL:{fallback:0,kind:'boolean'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.BOOL' has 'number' fallback, not 'boolean' or 'undefined'`);
-    xp(`v.schema({BOOL:{max:true,kind:'boolean'}, _meta:{}}, false)`,
-        v.schema({BOOL:{max:true,kind:'boolean'}, _meta:{}}, false)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'BOOL' of the schema has 'boolean' max, not 'undefined'`);
-    xp(`v.schema({BOOL:{min:1,kind:'boolean'}, _meta:{}}, 's')`,
-        v.schema({BOOL:{min:1,kind:'boolean'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.BOOL' has 'number' min, not 'undefined'`);
-    xp(`v.schema({BOOL:{rule:{},kind:'boolean'}, _meta:{}})`,
-        v.schema({BOOL:{rule:{},kind:'boolean'}, _meta:{}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'BOOL' of the schema has 'object' rule, not 'undefined'`);
-    xp(`v.schema({BOOL:{set:[],kind:'boolean'}, _meta:{}}, 's')`,
-        v.schema({BOOL:{set:[],kind:'boolean'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.BOOL' has 'array' set, not 'undefined'`);
+    et(`v.schema({BOOL:{fallback:0,kind:'boolean'}, _meta:{}}, 's')`,
+        v.schema({BOOL:{fallback:0,kind:'boolean'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.BOOL' has 'number' fallback, not 'boolean' or 'undefined'`);
+    et(`v.schema({BOOL:{max:true,kind:'boolean'}, _meta:{}}, false)`,
+        v.schema({BOOL:{max:true,kind:'boolean'}, _meta:{}}, false)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'BOOL' of the schema has 'boolean' max, not 'undefined'`);
+    et(`v.schema({BOOL:{min:1,kind:'boolean'}, _meta:{}}, 's')`,
+        v.schema({BOOL:{min:1,kind:'boolean'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.BOOL' has 'number' min, not 'undefined'`);
+    et(`v.schema({BOOL:{rule:{},kind:'boolean'}, _meta:{}})`,
+        v.schema({BOOL:{rule:{},kind:'boolean'}, _meta:{}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'BOOL' of the schema has 'object' rule, not 'undefined'`);
+    et(`v.schema({BOOL:{set:[],kind:'boolean'}, _meta:{}}, 's')`,
+        v.schema({BOOL:{set:[],kind:'boolean'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.BOOL' has 'array' set, not 'undefined'`);
 
     // Schema invalid, integer and number.
-    xp(`v.schema({i:{fallback:[],kind:'integer'}, _meta:{}}, 's')`,
-        v.schema({i:{fallback:[],kind:'integer'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.i' has 'array' fallback, not 'number' or 'undefined'`);
-    xp(`v.schema({n:{max:true,kind:'number'}, _meta:{}}, -0)`,
-        v.schema({n:{max:true,kind:'number'}, _meta:{}}, -0)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'n' of the schema has 'boolean' max, not 'number' or 'undefined'`);
-    xp(`v.schema({int:{min:[],kind:'integer'}, _meta:{}}, 's')`,
-        v.schema({int:{min:[],kind:'integer'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.int' has 'array' min, not 'number' or 'undefined'`);
-    xp(`v.schema({NUM:{rule:1,kind:'number'}, _meta:{}}, undefined)`,
-        v.schema({NUM:{rule:1,kind:'number'}, _meta:{}}, undefined)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'NUM' of the schema has 'number' rule, not 'object' or 'undefined'`);
-    xp(`v.schema({NUM:{rule:{},kind:'number'}, _meta:{}}, 's')`,
-        v.schema({NUM:{rule:{},kind:'number'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.NUM' has 'undefined' rule.test, not 'function'`);
-    xp(`v.schema({INT:{set:0,kind:'integer'}, _meta:{}})`,
-        v.schema({INT:{set:0,kind:'integer'}, _meta:{}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'INT' of the schema has 'number' set, not an array or 'undefined'`);
-    xp(`v.schema({n:{set:[1,'2',3],kind:'number'}, _meta:{}}, 's')`,
-        v.schema({n:{set:[1,'2',3],kind:'number'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.n' has 'string' set[1], not 'number'`);
+    et(`v.schema({i:{fallback:[],kind:'integer'}, _meta:{}}, 's')`,
+        v.schema({i:{fallback:[],kind:'integer'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.i' has 'array' fallback, not 'number' or 'undefined'`);
+    et(`v.schema({n:{max:true,kind:'number'}, _meta:{}}, -0)`,
+        v.schema({n:{max:true,kind:'number'}, _meta:{}}, -0)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'n' of the schema has 'boolean' max, not 'number' or 'undefined'`);
+    et(`v.schema({int:{min:[],kind:'integer'}, _meta:{}}, 's')`,
+        v.schema({int:{min:[],kind:'integer'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.int' has 'array' min, not 'number' or 'undefined'`);
+    et(`v.schema({NUM:{rule:1,kind:'number'}, _meta:{}}, undefined)`,
+        v.schema({NUM:{rule:1,kind:'number'}, _meta:{}}, undefined)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'NUM' of the schema has 'number' rule, not 'object' or 'undefined'`);
+    et(`v.schema({NUM:{rule:{},kind:'number'}, _meta:{}}, 's')`,
+        v.schema({NUM:{rule:{},kind:'number'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.NUM' has 'undefined' rule.test, not 'function'`);
+    et(`v.schema({INT:{set:0,kind:'integer'}, _meta:{}})`,
+        v.schema({INT:{set:0,kind:'integer'}, _meta:{}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'INT' of the schema has 'number' set, not an array or 'undefined'`);
+    et(`v.schema({n:{set:[1,'2',3],kind:'number'}, _meta:{}}, 's')`,
+        v.schema({n:{set:[1,'2',3],kind:'number'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.n' has 'string' set[1], not 'number'`);
 
     // Schema invalid, string.
-    xp(`v.schema({s:{fallback:1,kind:'string'}, _meta:{}}, 's')`,
-        v.schema({s:{fallback:1,kind:'string'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.s' has 'number' fallback, not 'string' or 'undefined'`);
-    xp(`v.schema({str:{max:[],kind:'string'}, _meta:{}}, null)`,
-        v.schema({str:{max:[],kind:'string'}, _meta:{}}, null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'str' of the schema has 'array' max, not 'number' or 'undefined'`);
-    xp(`v.schema({S:{min:{},kind:'string'}, _meta:{}}, 's')`,
-        v.schema({S:{min:{},kind:'string'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.S' has 'object' min, not 'number' or 'undefined'`);
-    xp(`v.schema({STR:{rule:'1',kind:'string'}, _meta:{}}, '')`,
-        v.schema({STR:{rule:'1',kind:'string'}, _meta:{}}, '')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 'STR' of the schema has 'string' rule, not 'object' or 'undefined'`);
-    xp(`v.schema({_s:{rule:{test:[]},kind:'string'}, _meta:{}}, 's')`, // @TODO '...has 'array' rule.test...'
-        v.schema({_s:{rule:{test:[]},kind:'string'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's._s' has 'object' rule.test, not 'function'`);
-    xp(`v.schema({_:{set:0,kind:'string'}, _meta:{}})`,
-        v.schema({_:{set:0,kind:'string'}, _meta:{}})).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): '_' of the schema has 'number' set, not an array or 'undefined'`);
-    xp(`v.schema({string:{set:[1,'2',3],kind:'string'}, _meta:{}}, 's')`,
-        v.schema({string:{set:[1,'2',3],kind:'string'}, _meta:{}}, 's')).toBe(false);
-    xp(`v.err`, v.err).toBe(`sma(): 's.string' has 'number' set[0], not 'string'`);
+    et(`v.schema({s:{fallback:1,kind:'string'}, _meta:{}}, 's')`,
+        v.schema({s:{fallback:1,kind:'string'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.s' has 'number' fallback, not 'string' or 'undefined'`);
+    et(`v.schema({str:{max:[],kind:'string'}, _meta:{}}, null)`,
+        v.schema({str:{max:[],kind:'string'}, _meta:{}}, null)).is(false);
+    et(`v.err`, v.err).is(`sma(): 'str' of the schema has 'array' max, not 'number' or 'undefined'`);
+    et(`v.schema({S:{min:{},kind:'string'}, _meta:{}}, 's')`,
+        v.schema({S:{min:{},kind:'string'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.S' has 'object' min, not 'number' or 'undefined'`);
+    et(`v.schema({STR:{rule:'1',kind:'string'}, _meta:{}}, '')`,
+        v.schema({STR:{rule:'1',kind:'string'}, _meta:{}}, '')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'STR' of the schema has 'string' rule, not 'object' or 'undefined'`);
+    et(`v.schema({_s:{rule:{test:[]},kind:'string'}, _meta:{}}, 's')`, // @TODO '...has 'array' rule.test...'
+        v.schema({_s:{rule:{test:[]},kind:'string'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's._s' has 'object' rule.test, not 'function'`);
+    et(`v.schema({_:{set:0,kind:'string'}, _meta:{}})`,
+        v.schema({_:{set:0,kind:'string'}, _meta:{}})).is(false);
+    et(`v.err`, v.err).is(`sma(): '_' of the schema has 'number' set, not an array or 'undefined'`);
+    et(`v.schema({string:{set:[1,'2',3],kind:'string'}, _meta:{}}, 's')`,
+        v.schema({string:{set:[1,'2',3],kind:'string'}, _meta:{}}, 's')).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.string' has 'number' set[0], not 'string'`);
 
 }

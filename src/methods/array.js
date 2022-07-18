@@ -188,301 +188,303 @@ export default function array(value, name, ...args) {
 }
 
 // Tests Validate.array()
-export function test(xp, Validate) {
-    xp().section('array()');
+export function test(expect, Validate) {
+    const et = expect.that;
+
+    expect.section('array()');
 
     const v = new Validate('arr()');
     let exc;
 
     // Basic ok.
-    xp(`v.array([], 'empty')`,
-        v.array([], 'empty')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([1,2,3], 'nums')`,
-        v.array([1,2,3], 'nums')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([1,2,3], 'nums', 3, 4)`,
-        v.array([1,2,3], 'nums', 3, 4)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([], 'empty')`,
+        v.array([], 'empty')).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([1,2,3], 'nums')`,
+        v.array([1,2,3], 'nums')).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([1,2,3], 'nums', 3, 4)`,
+        v.array([1,2,3], 'nums', 3, 4)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Nullish.
-    xp(`v.array(undefined, 'undef')`,
-        v.array(undefined, 'undef')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'undef' is type 'undefined' not an array`);
-    xp(`v.array(null)`,
-        v.array(null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): a value is null not an array`);
+    et(`v.array(undefined, 'undef')`,
+        v.array(undefined, 'undef')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'undef' is type 'undefined' not an array`);
+    et(`v.array(null)`,
+        v.array(null)).is(false);
+    et(`v.err`, v.err).is(`arr(): a value is null not an array`);
 
     // Incorrect `args`, throws an error.
-    try {v.array([], 'empty', null, null, null, null, '') } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', null, null, null, null, '')`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked 1: args[4] not nullish!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.array() incorrectly invoked 1: args[4] not nullish!');
-    try {v.array([], 'empty', 123, null, null, undefined, null, 0) } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', 123, null, null, undefined, null, 0)`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked 2: args[5] not nullish!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.array() incorrectly invoked 2: args[5] not nullish!');
-    try {v.array([], 'empty', 123, 456, undefined, {}) } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', 123, 456, undefined, {})`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked 3: args[3] not nullish!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.array() incorrectly invoked 3: args[3] not nullish!');
-    try {v.array([], 'empty', undefined, 456, undefined, undefined, 0, 0) } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', undefined, 456, undefined, undefined, 0, 0)`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked 4: args[4] not nullish!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.array() incorrectly invoked 4: args[4] not nullish!');
-    try {v.array([], 'empty', null, 456, {}) } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', null, 456, {})`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
-    try {v.array([], 'empty', '5') } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', '5')`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
-    xp(`v.err`, v.err)
-        .toBe('Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
-    try {v.array([], 'empty', 0/0, null, null, undefined, null) } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', 0/0, null, null, undefined, null)`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked: min is NaN!');
-    try {v.array([], 'empty', 0, 0/0, null, null, undefined, null) } catch (e) { exc = `${e}` }
-    xp(`v.array( [], 'empty', 0, 0/0, null, null, undefined, null)`, exc)
-        .toBe('Error: Validate.array() incorrectly invoked: max is NaN!');
+    try{v.array([], 'empty', null, null, null, null, '') } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', null, null, null, null, '')`, exc)
+        .is('Error: Validate.array() incorrectly invoked 1: args[4] not nullish!');
+    et(`v.err`, v.err)
+        .is('Validate.array() incorrectly invoked 1: args[4] not nullish!');
+    try{v.array([], 'empty', 123, null, null, undefined, null, 0) } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', 123, null, null, undefined, null, 0)`, exc)
+        .is('Error: Validate.array() incorrectly invoked 2: args[5] not nullish!');
+    et(`v.err`, v.err)
+        .is('Validate.array() incorrectly invoked 2: args[5] not nullish!');
+    try{v.array([], 'empty', 123, 456, undefined, {}) } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', 123, 456, undefined, {})`, exc)
+        .is('Error: Validate.array() incorrectly invoked 3: args[3] not nullish!');
+    et(`v.err`, v.err)
+        .is('Validate.array() incorrectly invoked 3: args[3] not nullish!');
+    try{v.array([], 'empty', undefined, 456, undefined, undefined, 0, 0) } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', undefined, 456, undefined, undefined, 0, 0)`, exc)
+        .is('Error: Validate.array() incorrectly invoked 4: args[4] not nullish!');
+    et(`v.err`, v.err)
+        .is('Validate.array() incorrectly invoked 4: args[4] not nullish!');
+    try{v.array([], 'empty', null, 456, {}) } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', null, 456, {})`, exc)
+        .is('Error: Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
+    et(`v.err`, v.err)
+        .is('Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
+    try{v.array([], 'empty', '5') } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', '5')`, exc)
+        .is('Error: Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
+    et(`v.err`, v.err)
+        .is('Validate.array() incorrectly invoked 5: args is not one of the nine configurations!');
+    try{v.array([], 'empty', 0/0, null, null, undefined, null) } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', 0/0, null, null, undefined, null)`, exc)
+        .is('Error: Validate.array() incorrectly invoked: min is NaN!');
+    try{v.array([], 'empty', 0, 0/0, null, null, undefined, null) } catch (e) { exc = `${e}` }
+    et(`v.array([], 'empty', 0, 0/0, null, null, undefined, null)`, exc)
+        .is('Error: Validate.array() incorrectly invoked: max is NaN!');
 
     // Basic invalid.
-    xp(`v.array(0, 'zero')`,
-        v.array(0, 'zero')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'zero' is type 'number' not an array`);
-    xp(`v.array('1,2,3')`,
-        v.array('1,2,3')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): a value is type 'string' not an array`);
-    xp(`v.array([1,2], 'nums', 3, 4)`,
-        v.array([1,2], 'nums', 3, 4)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'nums' length 2 is < 3`);
-    xp(`v.array([1,2,3,4,5], null, 3, 4)`,
-        v.array([1,2,3,4,5], null, 3, 4)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): array length 5 is > 4`);
+    et(`v.array(0, 'zero')`,
+        v.array(0, 'zero')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'zero' is type 'number' not an array`);
+    et(`v.array('1,2,3')`,
+        v.array('1,2,3')).is(false);
+    et(`v.err`, v.err).is(`arr(): a value is type 'string' not an array`);
+    et(`v.array([1,2], 'nums', 3, 4)`,
+        v.array([1,2], 'nums', 3, 4)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'nums' length 2 is < 3`);
+    et(`v.array([1,2,3,4,5], null, 3, 4)`,
+        v.array([1,2,3,4,5], null, 3, 4)).is(false);
+    et(`v.err`, v.err).is(`arr(): array length 5 is > 4`);
 
     // Array of booleans ok.
-    xp(`v.array([], 'empty', v.boolean)`,
-        v.array([], 'empty', v.boolean)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([true,false,true], 'bools', v.boolean)`,
-        v.array([true,false,true], 'bools', v.boolean)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([], 'empty', v.boolean)`,
+        v.array([], 'empty', v.boolean)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([true,false,true], 'bools', v.boolean)`,
+        v.array([true,false,true], 'bools', v.boolean)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Array of booleans invalid.
-    xp(`v.array([10], 'ten', v.boolean)`,
-        v.array([10], 'ten', v.boolean)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'ten[0]' is type 'number' not 'boolean'`);
-    xp(`v.array([true,0,true], null, v.boolean)`,
-        v.array([true,0,true], null, v.boolean)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[1]' is type 'number' not 'boolean'`);
+    et(`v.array([10], 'ten', v.boolean)`,
+        v.array([10], 'ten', v.boolean)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'ten[0]' is type 'number' not 'boolean'`);
+    et(`v.array([true,0,true], null, v.boolean)`,
+        v.array([true,0,true], null, v.boolean)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[1]' is type 'number' not 'boolean'`);
 
     // Array of integers ok.
-    xp(`v.array([0,1,2,3,4], 'count', v.integer)`,
-        v.array([0,1,2,3,4], 'count', v.integer)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([0,1,2,3,4], 0, v.integer, 0, 4)`,
-        v.array([0,1,2,3,4], 0, v.integer, 0, 4)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,2,1,0])`,
-        v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,2,1,0])).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([0,2,4,8], 'evens', v.integer, {test:n=>n%2===0})`,
-        v.array([0,2,4,8], 'evens', v.integer, {test:n=>n%2===0})).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([0,1,2,3,4], 'count', v.integer)`,
+        v.array([0,1,2,3,4], 'count', v.integer)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([0,1,2,3,4], 0, v.integer, 0, 4)`,
+        v.array([0,1,2,3,4], 0, v.integer, 0, 4)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,2,1,0])`,
+        v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,2,1,0])).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([0,2,4,8], 'evens', v.integer, {test:n=>n%2===0})`,
+        v.array([0,2,4,8], 'evens', v.integer, {test:n=>n%2===0})).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Array of integers invalid.
-    xp(`v.array([[]], 'subarray', v.integer)`,
-        v.array([[]], 'subarray', v.integer)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'subarray[0]' is an array not type 'number'`);
-    xp(`v.array([0,1,2,3,4.0001], null, v.integer)`,
-        v.array([0,1,2,3,4.0001], null, v.integer)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[4]' 4.0001 is not an integer`);
-    xp(`v.array([0,1,2,3,4], null, v.integer, 2, 4)`,
-        v.array([0,1,2,3,4], null, v.integer, 2, 4)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[0]' 0 is < 2`);
-    xp(`v.array([0,1,2,3,4], 'count', v.integer, 0, 3)`,
-        v.array([0,1,2,3,4], 'count', v.integer, 0, 3)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'count[4]' 4 is > 3`);
-    xp(`v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,7777777,1,0])`,
-        v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,7777777,1,0])).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'count[2]' 2 is not in [6,5,4,3,777...,1,0]`);
-    xp(`v.array([0,2,4,5], 'evens', v.integer, {test:n=>n%2===0})`,
-        v.array([0,2,4,5], 'evens', v.integer, {test:n=>n%2===0})).toBe(false);
-        xp(`v.err`, v.err).toMatch(/^arr\(\): 'evens\[3]' 5 fails /);
+    et(`v.array([[]], 'subarray', v.integer)`,
+        v.array([[]], 'subarray', v.integer)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'subarray[0]' is an array not type 'number'`);
+    et(`v.array([0,1,2,3,4.0001], null, v.integer)`,
+        v.array([0,1,2,3,4.0001], null, v.integer)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[4]' 4.0001 is not an integer`);
+    et(`v.array([0,1,2,3,4], null, v.integer, 2, 4)`,
+        v.array([0,1,2,3,4], null, v.integer, 2, 4)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[0]' 0 is < 2`);
+    et(`v.array([0,1,2,3,4], 'count', v.integer, 0, 3)`,
+        v.array([0,1,2,3,4], 'count', v.integer, 0, 3)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'count[4]' 4 is > 3`);
+    et(`v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,7777777,1,0])`,
+        v.array([0,1,2,3,4], 'count', v.integer, [6,5,4,3,7777777,1,0])).is(false);
+    et(`v.err`, v.err).is(`arr(): 'count[2]' 2 is not in [6,5,4,3,777...,1,0]`);
+    et(`v.array([0,2,4,5], 'evens', v.integer, {test:n=>n%2===0})`,
+        v.array([0,2,4,5], 'evens', v.integer, {test:n=>n%2===0})).is(false);
+        et(`v.err`, v.err).passes(/^arr\(\): 'evens\[3]' 5 fails /);
 
     // Array of numbers ok.
-    xp(`v.array([-0.25,0,0.25], 'quarters', v.number)`,
-        v.array([-0.25,0,0.25], 'quarters', v.number)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([-0.25,0,0.25], {}, v.number, -0.25, 0.25)`,
-        v.array([-0.25,0,0.25], {}, v.number, -0.25, 0.25)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([-0.25,0,0.25], 'quarters', v.number, [-0.25,0,0.25])`,
-        v.array([-0.25,0,0.25], 'quarters', v.number, [-0.25,0,0.25])).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array([-Infinity,Infinity], 'infs', v.number, {test:n=>n<-9e99||n>9e99})`,
-        v.array([-Infinity,Infinity], 'infs', v.number, {test:n=>n<-9e99||n>9e99})).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([-0.25,0,0.25], 'quarters', v.number)`,
+        v.array([-0.25,0,0.25], 'quarters', v.number)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([-0.25,0,0.25], {}, v.number, -0.25, 0.25)`,
+        v.array([-0.25,0,0.25], {}, v.number, -0.25, 0.25)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([-0.25,0,0.25], 'quarters', v.number, [-0.25,0,0.25])`,
+        v.array([-0.25,0,0.25], 'quarters', v.number, [-0.25,0,0.25])).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array([-Infinity,Infinity], 'infs', v.number, {test:n=>n<-9e99||n>9e99})`,
+        v.array([-Infinity,Infinity], 'infs', v.number, {test:n=>n<-9e99||n>9e99})).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Array of numbers invalid.
-    xp(`v.array([-0.25,0,null,0.25], '', v.number)`,
-        v.array([-0.25,0,null,0.25], '', v.number)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[2]' is null not type 'number'`);
-    xp(`v.array([-0.25,0,0.25,NaN], null, v.number)`,
-        v.array([-0.25,0,0.25,NaN], null, v.number)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[3]' is NaN, not a valid number`);
-    xp(`v.array([-0.25,0,0.25], undefined, v.number, -0.25, -0.1)`,
-        v.array([-0.25,0,0.25], undefined, v.number, -0.25, -0.1)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[1]' 0 is > -0.1`);
+    et(`v.array([-0.25,0,null,0.25], '', v.number)`,
+        v.array([-0.25,0,null,0.25], '', v.number)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[2]' is null not type 'number'`);
+    et(`v.array([-0.25,0,0.25,NaN], null, v.number)`,
+        v.array([-0.25,0,0.25,NaN], null, v.number)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[3]' is NaN, not a valid number`);
+    et(`v.array([-0.25,0,0.25], undefined, v.number, -0.25, -0.1)`,
+        v.array([-0.25,0,0.25], undefined, v.number, -0.25, -0.1)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[1]' 0 is > -0.1`);
     const quarters = [-0.25,0,0.25];
     quarters.length = 6;
-    xp(`v.array([${quarters}], 'quarters', v.number, -0.25, 0.25)`,
-        v.array(quarters, 'quarters', v.number, -0.25, 0.25)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'quarters[3]' is type 'undefined' not 'number'`);
-    xp(`v.array([-0.25,0,0.25], 'quarters', v.number, [6,5,4,3,7777777,1,0])`,
-        v.array([-0.25,0,0.25], 'quarters', v.number, [6,5,4,3,7777777,1,0])).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'quarters[0]' -0.25 is not in [6,5,4,3,777...,1,0]`);
-    xp(`v.array([-Infinity,Infinity,9e99], 'infs', v.number, {test:n=>n<-9e99||n>9e99})`,
-        v.array([-Infinity,Infinity,9e99], 'infs', v.number, {test:n=>n<-9e99||n>9e99})).toBe(false);
-    xp(`v.err`, v.err).toMatch(/^arr\(\): 'infs\[2\]' 9e\+99 fails /);
+    et(`v.array([${quarters}], 'quarters', v.number, -0.25, 0.25)`,
+        v.array(quarters, 'quarters', v.number, -0.25, 0.25)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'quarters[3]' is type 'undefined' not 'number'`);
+    et(`v.array([-0.25,0,0.25], 'quarters', v.number, [6,5,4,3,7777777,1,0])`,
+        v.array([-0.25,0,0.25], 'quarters', v.number, [6,5,4,3,7777777,1,0])).is(false);
+    et(`v.err`, v.err).is(`arr(): 'quarters[0]' -0.25 is not in [6,5,4,3,777...,1,0]`);
+    et(`v.array([-Infinity,Infinity,9e99], 'infs', v.number, {test:n=>n<-9e99||n>9e99})`,
+        v.array([-Infinity,Infinity,9e99], 'infs', v.number, {test:n=>n<-9e99||n>9e99})).is(false);
+    et(`v.err`, v.err).passes(/^arr\(\): 'infs\[2\]' 9e\+99 fails /);
 
     // Array of strings ok.
-    xp(`v.array(['one','two','three'], 'count', v.string)`,
-        v.array(['one','two','three'], 'count', v.string)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array(['one','two','three'], 0, v.string, 3, 5)`,
-        v.array(['one','two','three'], 0, v.string, 3, 5)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array(['two','three'], 'count', v.string, ['one','two','three'])`,
-        v.array(['two','three'], 'count', v.string, ['one','two','three'])).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
-    xp(`v.array(['two','three'], false, v.string, /^[a-z]+$/)`,
-        v.array(['two','three'], false, v.string, /^[a-z]+$/)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array(['one','two','three'], 'count', v.string)`,
+        v.array(['one','two','three'], 'count', v.string)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array(['one','two','three'], 0, v.string, 3, 5)`,
+        v.array(['one','two','three'], 0, v.string, 3, 5)).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array(['two','three'], 'count', v.string, ['one','two','three'])`,
+        v.array(['two','three'], 'count', v.string, ['one','two','three'])).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.array(['two','three'], false, v.string, /^[a-z]+$/)`,
+        v.array(['two','three'], false, v.string, /^[a-z]+$/)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Array of strings invalid.
-    xp(`v.array(['one',2,'three'], 'count', v.string)`,
-        v.array(['one',2,'three'], 'count', v.string)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'count[1]' is type 'number' not 'string'`);
-    xp(`v.array(['one','two',['three']], true, v.string)`,
-        v.array(['one','two',['three']], true, v.string)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'true[2]' is an array not type 'string'`);
-    xp(`v.array(['one','two','three'], null, v.string, 4, 4)`,
-        v.array(['one','two','three'], null, v.string, 4, 4)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): '[0]' length 3 is < 4`);
-    xp(`v.array(['one','two','three'], 'count', v.string, 0, 3)`,
-        v.array(['one','two','three'], 'count', v.string, 0, 3)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'count[2]' length 5 is > 3`);
-    xp(`v.array(['one','two','three'], 'count', v.string, [6,5,4,3,'one',1,0])`,
-        v.array(['one','two','three'], 'count', v.string, [6,5,4,3,'one',1,0])).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'count[1]' "two" is not in [6,5,4,3,one,1,0]`);
-    xp(`v.array(['one','two','THREE'], 'count', v.string, /^[a-z]+$/)`,
-        v.array(['one','two','THREE'], 'count', v.string, /^[a-z]+$/)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'count[2]' "THREE" fails /^[a-z]+$/`);
+    et(`v.array(['one',2,'three'], 'count', v.string)`,
+        v.array(['one',2,'three'], 'count', v.string)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'count[1]' is type 'number' not 'string'`);
+    et(`v.array(['one','two',['three']], true, v.string)`,
+        v.array(['one','two',['three']], true, v.string)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'true[2]' is an array not type 'string'`);
+    et(`v.array(['one','two','three'], null, v.string, 4, 4)`,
+        v.array(['one','two','three'], null, v.string, 4, 4)).is(false);
+    et(`v.err`, v.err).is(`arr(): '[0]' length 3 is < 4`);
+    et(`v.array(['one','two','three'], 'count', v.string, 0, 3)`,
+        v.array(['one','two','three'], 'count', v.string, 0, 3)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'count[2]' length 5 is > 3`);
+    et(`v.array(['one','two','three'], 'count', v.string, [6,5,4,3,'one',1,0])`,
+        v.array(['one','two','three'], 'count', v.string, [6,5,4,3,'one',1,0])).is(false);
+    et(`v.err`, v.err).is(`arr(): 'count[1]' "two" is not in [6,5,4,3,one,1,0]`);
+    et(`v.array(['one','two','THREE'], 'count', v.string, /^[a-z]+$/)`,
+        v.array(['one','two','THREE'], 'count', v.string, /^[a-z]+$/)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'count[2]' "THREE" fails /^[a-z]+$/`);
 
     // Array of array of booleans ok.
-    xp(`v.array([[true, false],[],[true]], 'grid', v.array, v.boolean)`,
-        v.array([[true, false],[],[true]], 'grid', v.array, v.boolean)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([[true, false],[],[true]], 'grid', v.array, v.boolean)`,
+        v.array([[true, false],[],[true]], 'grid', v.array, v.boolean)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Array of array of booleans fail.
-    xp(`v.array([[true, false],[],[123]], 'grid', v.array, v.boolean)`,
-        v.array([[true, false],[],[123]], 'grid', v.array, v.boolean)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'grid[2][0]' is type 'number' not 'boolean'`);
+    et(`v.array([[true, false],[],[123]], 'grid', v.array, v.boolean)`,
+        v.array([[true, false],[],[123]], 'grid', v.array, v.boolean)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'grid[2][0]' is type 'number' not 'boolean'`);
 
     // The nine configurations ok.
     // 1. `args` is empty or all nullish - no min, max or validator
-    xp(`v.array([false,123,[],'anything'], 'arr', null, undefined, null, null)`,
-        v.array([false,123,[],'anything'], 'arr', null, undefined, null, null)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false,123,[],'anything'], 'arr', null, undefined, null, null)`,
+        v.array([false,123,[],'anything'], 'arr', null, undefined, null, null)).is(true);
+    et(`v.err`, v.err).is(null);
     // 2. `args[0]` is a number, and the rest of args is nullish - just min
-    xp(`v.array([false,123,[],'anything'], 'arr', 4, null, null, undefined)`,
-        v.array([false,123,[],'anything'], 'arr', 4, null, null, undefined)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false,123,[],'anything'], 'arr', 4, null, null, undefined)`,
+        v.array([false,123,[],'anything'], 'arr', 4, null, null, undefined)).is(true);
+    et(`v.err`, v.err).is(null);
     // 3. `args[0]` and `args[1]` are both numbers, rest of args nullish - min and max
-    xp(`v.array([false,123,[],'anything'], 'arr', 2, 4, undefined, undefined, null)`,
-        v.array([false,123,[],'anything'], 'arr', 2, 4, undefined, undefined, null)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false,123,[],'anything'], 'arr', 2, 4, undefined, undefined, null)`,
+        v.array([false,123,[],'anything'], 'arr', 2, 4, undefined, undefined, null)).is(true);
+    et(`v.err`, v.err).is(null);
     // 4. `args[0]` is nullish, `args[1]` is number, rest of args nullish - just max
-    xp(`v.array([false,123,[],'anything'], 'arr', null, 8, null, null, null)`,
-        v.array([false,123,[],'anything'], 'arr', null, 8, null, null, null)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false,123,[],'anything'], 'arr', null, 8, null, null, null)`,
+        v.array([false,123,[],'anything'], 'arr', null, 8, null, null, null)).is(true);
+    et(`v.err`, v.err).is(null);
     // 5. `args[0]` and `[1]` numbers, `[2]` function, rest anything - min, max and validator
-    xp(`v.array([false], 'arr', 0, 1, v.boolean, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 0, 1, v.boolean, 'ignored', 'in this case')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false], 'arr', 0, 1, v.boolean, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 0, 1, v.boolean, 'ignored', 'in this case')).is(true);
+    et(`v.err`, v.err).is(null);
     // 6. `args[0]` number, `[1]` nullish, `[2]` function, rest anything - min and validator
-    xp(`v.array([false], 'arr', 1, null, ()=>true, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 1, null, ()=>true, 'ignored', 'in this case')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false], 'arr', 1, null, ()=>true, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 1, null, ()=>true, 'ignored', 'in this case')).is(true);
+    et(`v.err`, v.err).is(null);
     // 7. `args[0]` nullish, `[1]` number, `[2]` function, rest anything - max and validator
-    xp(`v.array([false,0], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')`,
-        v.array([false,0], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([false,0], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')`,
+        v.array([false,0], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')).is(true);
+    et(`v.err`, v.err).is(null);
     // 8. `args[0]` is a function, and the rest of args is anything - just validator
-    xp(`v.array([[250],[300,200]], 'arr', v.array, v.number, 200, 300)`,
-        v.array([[250],[300,200]], 'arr', v.array, v.number, 200, 300)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([[250],[300,200]], 'arr', v.array, v.number, 200, 300)`,
+        v.array([[250],[300,200]], 'arr', v.array, v.number, 200, 300)).is(true);
+    et(`v.err`, v.err).is(null);
     // 9. `args[0]` is number, `[1]` is function, rest anything - min and validator
-    xp(`v.array([[250],[300,200]], 'arr', 2, v.array, v.number, 200, 300)`,
-        v.array([[250],[300,200]], 'arr', 2, v.array, v.number, 200, 300)).toBe(true);
-    xp(`v.err`, v.err).toBe(null);
+    et(`v.array([[250],[300,200]], 'arr', 2, v.array, v.number, 200, 300)`,
+        v.array([[250],[300,200]], 'arr', 2, v.array, v.number, 200, 300)).is(true);
+    et(`v.err`, v.err).is(null);
 
     // The eight configurations which can fail.
     // 2. `args[0]` is a number, and the rest of args is nullish - just min
-    xp(`v.array([false,123,[],'anything'], 'arr', 5, null, null, undefined)`,
-        v.array([false,123,[],'anything'], 'arr', 5, null, null, undefined)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 4 is < 5`);
+    et(`v.array([false,123,[],'anything'], 'arr', 5, null, null, undefined)`,
+        v.array([false,123,[],'anything'], 'arr', 5, null, null, undefined)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 4 is < 5`);
     // 3. `args[0]` and `args[1]` are both numbers, rest of args nullish - min and max
-    xp(`v.array([false,123,[],'anything'], 'arr', 5, 5, undefined, undefined, null)`,
-        v.array([false,123,[],'anything'], 'arr', 5, 5, undefined, undefined, null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 4 is < 5`);
-    xp(`v.array([false,123,[],'anything'], 'arr', 2, 3, undefined, undefined, null)`,
-        v.array([false,123,[],'anything'], 'arr', 2, 3, undefined, undefined, null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 4 is > 3`);
+    et(`v.array([false,123,[],'anything'], 'arr', 5, 5, undefined, undefined, null)`,
+        v.array([false,123,[],'anything'], 'arr', 5, 5, undefined, undefined, null)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 4 is < 5`);
+    et(`v.array([false,123,[],'anything'], 'arr', 2, 3, undefined, undefined, null)`,
+        v.array([false,123,[],'anything'], 'arr', 2, 3, undefined, undefined, null)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 4 is > 3`);
     // 4. `args[0]` is nullish, `args[1]` is number, rest of args nullish - just max
-    xp(`v.array([false,123,[],'anything'], 'arr', null, 0, null, null, null)`,
-        v.array([false,123,[],'anything'], 'arr', null, 0, null, null, null)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 4 is > 0`);
+    et(`v.array([false,123,[],'anything'], 'arr', null, 0, null, null, null)`,
+        v.array([false,123,[],'anything'], 'arr', null, 0, null, null, null)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 4 is > 0`);
     // 5. `args[0]` and `[1]` numbers, `[2]` function, rest anything - min, max and validator
-    xp(`v.array([false], 'arr', 2, 2, v.boolean, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 2, 2, v.boolean, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 1 is < 2`);
-    xp(`v.array([false], 'arr', 0, 0, v.boolean, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 0, 0, v.boolean, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 1 is > 0`);
-    xp(`v.array([false], 'arr', 0, 1, v.integer, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 0, 1, v.integer, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr[0]' is type 'boolean' not 'number'`);
+    et(`v.array([false], 'arr', 2, 2, v.boolean, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 2, 2, v.boolean, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 1 is < 2`);
+    et(`v.array([false], 'arr', 0, 0, v.boolean, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 0, 0, v.boolean, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 1 is > 0`);
+    et(`v.array([false], 'arr', 0, 1, v.integer, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 0, 1, v.integer, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr[0]' is type 'boolean' not 'number'`);
     // 6. `args[0]` number, `[1]` nullish, `[2]` function, rest anything - min and validator
-    xp(`v.array([false], 'arr', 1.01, null, ()=>true, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 1.01, null, ()=>true, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 1 is < 1.01`);
-    xp(`v.array([false], 'arr', 1, null, ()=>false, 'ignored', 'in this case')`,
-        v.array([false], 'arr', 1, null, ()=>false, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(null); // `()=>false` does not set `v.err`
+    et(`v.array([false], 'arr', 1.01, null, ()=>true, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 1.01, null, ()=>true, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 1 is < 1.01`);
+    et(`v.array([false], 'arr', 1, null, ()=>false, 'ignored', 'in this case')`,
+        v.array([false], 'arr', 1, null, ()=>false, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(null); // `()=>false` does not set `v.err`
     // 7. `args[0]` nullish, `[1]` number, `[2]` function, rest anything - max and validator
-    xp(`v.array([false,null], 'arr', null, 1.99, el=>el!=null, 'ignored', 'in this case')`,
-        v.array([false,null], 'arr', null, 1.99, el=>el!=null, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 2 is > 1.99`);
-    xp(`v.array([false,undefined], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')`,
-        v.array([false,undefined], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')).toBe(false);
-    xp(`v.err`, v.err).toBe(null); // `el=>el!=null` does not set `v.err`
+    et(`v.array([false,null], 'arr', null, 1.99, el=>el!=null, 'ignored', 'in this case')`,
+        v.array([false,null], 'arr', null, 1.99, el=>el!=null, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 2 is > 1.99`);
+    et(`v.array([false,undefined], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')`,
+        v.array([false,undefined], 'arr', null, 2, el=>el!=null, 'ignored', 'in this case')).is(false);
+    et(`v.err`, v.err).is(null); // `el=>el!=null` does not set `v.err`
     // 8. `args[0]` is a function, and the rest of args is anything - just validator
-    xp(`v.array([[250],[300,200]], 'arr', v.array, v.number, 200, 300)`,
-        v.array([[250],[300,280,10,200]], 'arr', v.array, v.number, 200, 300)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr[1][2]' 10 is < 200`);
+    et(`v.array([[250],[300,200]], 'arr', v.array, v.number, 200, 300)`,
+        v.array([[250],[300,280,10,200]], 'arr', v.array, v.number, 200, 300)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr[1][2]' 10 is < 200`);
     // 9. `args[0]` is number, `[1]` is function, rest anything - min and validator
-    xp(`v.array([[250],[300,200]], 'arr', 3, v.array, v.number, 200, 300)`,
-        v.array([[250],[300,200]], 'arr', 3, v.array, v.number, 200, 300)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr' length 2 is < 3`);
-    xp(`v.array([[255.5555],[300,200]], 'arr', 2, v.array, v.integer, 200, 300)`,
-        v.array([[255.5555],[300,200]], 'arr', 2, v.array, v.integer, 200, 300)).toBe(false);
-    xp(`v.err`, v.err).toBe(`arr(): 'arr[0][0]' 255.5555 is not an integer`);
+    et(`v.array([[250],[300,200]], 'arr', 3, v.array, v.number, 200, 300)`,
+        v.array([[250],[300,200]], 'arr', 3, v.array, v.number, 200, 300)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr' length 2 is < 3`);
+    et(`v.array([[255.5555],[300,200]], 'arr', 2, v.array, v.integer, 200, 300)`,
+        v.array([[255.5555],[300,200]], 'arr', 2, v.array, v.integer, 200, 300)).is(false);
+    et(`v.err`, v.err).is(`arr(): 'arr[0][0]' 255.5555 is not an integer`);
 
 }

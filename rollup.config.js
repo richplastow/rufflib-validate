@@ -53,16 +53,16 @@ export default [
         output: {
             file: 'docs/dist/rufflib-validate-test.umd.js',
             format: 'umd', // eg for `docs/run-browser-tests.html` in legacy browsers
-            name: 'rufflib.validate.test' // `rufflib.validate.test(validate, Expect)`
+            name: 'rufflib.validate.test' // `rufflib.validate.test(expect, Validate)`
         },
         // See https://babeljs.io/docs/en/babel-preset-env
         plugins: [
             babel({ babelHelpers: 'bundled' }),
             copy({
-                targets: [{
-                    src: 'node_modules/rufflib-expect/docs/dist/rufflib-expect.umd.es5.min.js',
-                    dest: 'docs/lib'
-                }]
+                targets: [
+                    'node_modules/rufflib-expect/docs/dist/rufflib-expect.umd.es5.min.js',
+                ],
+                outputFolder: 'docs/lib'
             })
         ]
     }

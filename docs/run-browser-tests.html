@@ -37,13 +37,13 @@
         document.head.appendChild($css);
 
         // Run the test suite.
-        var testSuite = new Expect('Validate Test Suite (dist, browser)');
-        validateTest(testSuite.expect, Validate);
+        var expect = new Expect('Validate Test Suite (dist, browser)');
+        validateTest(expect, Validate);
 
         // Display the results.
-        document.body.classList.add(testSuite.status);
+        document.body.classList.add(expect.status);
         document.querySelector('#test-output').innerHTML =
-            testSuite.render('Html', '', true);
+            expect.render('Html', '', true);
     }()</script>
 
 </body>
