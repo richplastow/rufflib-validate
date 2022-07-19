@@ -14,8 +14,48 @@
     }, _typeof(obj);
   }
 
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
+    return Constructor;
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
   /**
-   * Unit tests for rufflib-validate 1.0.1
+   * Unit tests for rufflib-validate 1.1.0
    * A RuffLIB library for succinctly validating JavaScript values.
    * https://richplastow.com/rufflib-validate
    * @license MIT
@@ -571,7 +611,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'empty', null)", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema' is null not an object");
+    et("v.object({}, 'empty', null)", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema' is null not an object");
 
     try {
       v.object({}, 'e', []);
@@ -580,7 +620,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', [])", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema' is an array not an object");
+    et("v.object({}, 'e', [])", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema' is an array not an object");
 
     try {
       v.object({}, 'e', {});
@@ -589,7 +629,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is type 'undefined' not an object");
+    et("v.object({}, 'e', {})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is type 'undefined' not an object");
 
     try {
       v.object({}, undefined, {
@@ -600,7 +640,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, undefined, {_meta:null})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is null not an object");
+    et("v.object({}, undefined, {_meta:null})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is null not an object");
 
     try {
       v.object({}, 'e', {
@@ -611,7 +651,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {_meta:123})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is type 'number' not an object");
+    et("v.object({}, 'e', {_meta:123})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is type 'number' not an object");
 
     try {
       v.object({}, undefined, {
@@ -622,7 +662,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, undefined, {_meta:[]})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is an array not an object");
+    et("v.object({}, undefined, {_meta:[]})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta' is an array not an object");
 
     try {
       v.object({}, 'e', {
@@ -634,7 +674,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {a:1, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.a' is type 'number' not an object");
+    et("v.object({}, 'e', {a:1, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.a' is type 'number' not an object");
 
     try {
       v.object({}, 'e', {
@@ -648,7 +688,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {a:{_meta:true}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.a._meta' is type 'boolean' not an object");
+    et("v.object({}, 'e', {a:{_meta:true}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.a._meta' is type 'boolean' not an object");
 
     try {
       v.object({}, 'e', {
@@ -662,7 +702,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {Foo:{_meta:[]}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.Foo._meta' is an array not an object");
+    et("v.object({}, 'e', {Foo:{_meta:[]}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.Foo._meta' is an array not an object");
 
     try {
       v.object({}, 'e', {
@@ -674,7 +714,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {num:{}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.num.kind' not recognised");
+    et("v.object({}, 'e', {num:{}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.num.kind' not recognised");
 
     try {
       v.object({}, 'e', {
@@ -689,7 +729,161 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {outer:{_meta:{},inner:{}}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.outer.inner.kind' not recognised"); // Incorrect `schema`, value properties are never allowed to be `null`.
+    et("v.object({}, 'e', {outer:{_meta:{},inner:{}}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.outer.inner.kind' not recognised"); // Incorrect `schema`, _meta.inst invalid.
+
+    try {
+      v.object({}, 'e', {
+        _meta: {
+          inst: []
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{inst:[]}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta.inst' is an array not type 'function'");
+
+    try {
+      v.object({}, 'e', {
+        _meta: {},
+        mid: {
+          _meta: {},
+          inner: {
+            _meta: {
+              inst: NaN
+            }
+          }
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{},mid:{_meta:{},inner:{_meta:{inst:NaN}}}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.mid.inner._meta.inst' is type 'number' not type 'function'");
+
+    try {
+      v.object({}, 'e', {
+        _meta: {
+          inst: {}
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{inst:{}}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta.inst' is type 'object' not type 'function'");
+
+    try {
+      v.object({}, 'e', {
+        _meta: {},
+        mid: {
+          _meta: {},
+          inner: {
+            _meta: {
+              inst: null
+            }
+          }
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{},mid:{_meta:{},inner:{_meta:{inst:null}}}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.mid.inner._meta.inst' is null not type 'function'");
+
+    var UndefinedName = /*#__PURE__*/_createClass(function UndefinedName() {
+      _classCallCheck(this, UndefinedName);
+    });
+
+    _defineProperty(UndefinedName, "name", undefined);
+
+    try {
+      v.object({}, 'e', {
+        _meta: {
+          inst: UndefinedName
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{inst:namelessFunct}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta.inst.name' is type 'undefined' not 'string'");
+
+    var FunctionName = /*#__PURE__*/_createClass(function FunctionName() {
+      _classCallCheck(this, FunctionName);
+    });
+
+    _defineProperty(FunctionName, "name", function (x) {
+      return x + 1;
+    });
+
+    try {
+      v.object({}, 'e', {
+        _meta: {},
+        mid: {
+          _meta: {},
+          inner: {
+            _meta: {
+              inst: FunctionName
+            }
+          }
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{},mid:{_meta:{},inner:{_meta:{inst:FunctionName}}}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.mid.inner._meta.inst.name' is type 'function' not 'string'");
+
+    var MathObjectName = /*#__PURE__*/_createClass(function MathObjectName() {
+      _classCallCheck(this, MathObjectName);
+    });
+
+    _defineProperty(MathObjectName, "name", Math);
+
+    try {
+      v.object({}, 'e', {
+        _meta: {
+          inst: MathObjectName
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{inst:MathObjectName}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._meta.inst.name' is type 'object' not 'string'");
+
+    var ArrayName = /*#__PURE__*/_createClass(function ArrayName() {
+      _classCallCheck(this, ArrayName);
+    });
+
+    _defineProperty(ArrayName, "name", ['a', 'bc']);
+
+    try {
+      v.object({}, 'e', {
+        _meta: {},
+        mid: {
+          _meta: {},
+          inner: {
+            _meta: {
+              inst: ArrayName
+            }
+          }
+        }
+      });
+      exc = OK;
+    } catch (e) {
+      exc = "".concat(e);
+    }
+
+    et("v.object({}, 'e', {_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.mid.inner._meta.inst.name' is an array not 'string'"); // Incorrect `schema`, value properties are never allowed to be `null`.
 
     try {
       v.object({}, 'e', {
@@ -704,7 +898,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {BOOL:{fallback:null,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL.fallback' is null");
+    et("v.object({}, 'e', {BOOL:{fallback:null,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL.fallback' is null");
 
     try {
       v.object({}, 'e', {
@@ -719,7 +913,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {n:{max:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.max' is null");
+    et("v.object({}, 'e', {n:{max:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.max' is null");
 
     try {
       v.object({}, 'e', {
@@ -734,7 +928,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {n:{min:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.min' is null");
+    et("v.object({}, 'e', {n:{min:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.min' is null");
 
     try {
       v.object({}, 'e', {
@@ -749,7 +943,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {n:{rule:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.rule' is null");
+    et("v.object({}, 'e', {n:{rule:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.rule' is null");
 
     try {
       v.object({}, 'e', {
@@ -764,7 +958,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {n:{set:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.set' is null"); // Incorrect `schema`, only 0 or 1 qualifiers allowed.
+    et("v.object({}, 'e', {n:{set:null,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n.set' is null"); // Incorrect `schema`, only 0 or 1 qualifiers allowed.
 
     try {
       v.object({}, 'e', {
@@ -780,7 +974,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {s:{max:1,rule:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '2' qualifiers, only 0 or 1 allowed");
+    et("v.object({}, 'e', {s:{max:1,rule:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '2' qualifiers, only 0 or 1 allowed");
 
     try {
       v.object({}, 'e', {
@@ -796,7 +990,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {s:{min:1,set:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '2' qualifiers, only 0 or 1 allowed");
+    et("v.object({}, 'e', {s:{min:1,set:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '2' qualifiers, only 0 or 1 allowed");
 
     try {
       v.object({}, 'e', {
@@ -813,7 +1007,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {s:{min:1,max:1,set:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '3' qualifiers, only 0 or 1 allowed");
+    et("v.object({}, 'e', {s:{min:1,max:1,set:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '3' qualifiers, only 0 or 1 allowed");
 
     try {
       v.object({}, 'e', {
@@ -831,7 +1025,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {s:{min:1,max:1,rule:1,set:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '4' qualifiers, only 0 or 1 allowed"); // Incorrect `schema`, boolean.
+    et("v.object({}, 'e', {s:{min:1,max:1,rule:1,set:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has '4' qualifiers, only 0 or 1 allowed"); // Incorrect `schema`, boolean.
 
     try {
       v.object({}, 'e', {
@@ -846,7 +1040,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {BOOL:{fallback:0,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'number' fallback, not 'boolean' or 'undefined'");
+    et("v.object({}, 'e', {BOOL:{fallback:0,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'number' fallback, not 'boolean' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -861,7 +1055,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {BOOL:{max:true,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'boolean' max, not 'undefined'");
+    et("v.object({}, 'e', {BOOL:{max:true,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'boolean' max, not 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -876,7 +1070,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {BOOL:{min:1,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'number' min, not 'undefined'");
+    et("v.object({}, 'e', {BOOL:{min:1,kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'number' min, not 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -891,7 +1085,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {BOOL:{rule:{},kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'object' rule, not 'undefined'");
+    et("v.object({}, 'e', {BOOL:{rule:{},kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'object' rule, not 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -906,7 +1100,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {BOOL:{set:[],kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'array' set, not 'undefined'"); // Incorrect `schema`, integer and number.
+    et("v.object({}, 'e', {BOOL:{set:[],kind:'boolean'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.BOOL' has 'array' set, not 'undefined'"); // Incorrect `schema`, integer and number.
 
     try {
       v.object({}, 'e', {
@@ -921,7 +1115,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {i:{fallback:[],kind:'integer'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.i' has 'array' fallback, not 'number' or 'undefined'");
+    et("v.object({}, 'e', {i:{fallback:[],kind:'integer'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.i' has 'array' fallback, not 'number' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -936,7 +1130,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {n:{max:true,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n' has 'boolean' max, not 'number' or 'undefined'");
+    et("v.object({}, 'e', {n:{max:true,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n' has 'boolean' max, not 'number' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -951,7 +1145,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {int:{min:[]],kind:'integer'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.int' has 'array' min, not 'number' or 'undefined'");
+    et("v.object({}, 'e', {int:{min:[]],kind:'integer'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.int' has 'array' min, not 'number' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -966,7 +1160,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {NUM:{rule:1,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.NUM' has 'number' rule, not 'object' or 'undefined'");
+    et("v.object({}, 'e', {NUM:{rule:1,kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.NUM' has 'number' rule, not 'object' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -981,7 +1175,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {NUM:{rule:{},kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.NUM' has 'undefined' rule.test, not 'function'");
+    et("v.object({}, 'e', {NUM:{rule:{},kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.NUM' has 'undefined' rule.test, not 'function'");
 
     try {
       v.object({}, 'e', {
@@ -996,7 +1190,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {INT:{set:0,kind:'integer'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.INT' has 'number' set, not an array or 'undefined'");
+    et("v.object({}, 'e', {INT:{set:0,kind:'integer'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.INT' has 'number' set, not an array or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -1011,7 +1205,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {n:{set:[1,'2',3],kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n' has 'string' set[1], not 'number'"); // Incorrect `schema`, string.
+    et("v.object({}, 'e', {n:{set:[1,'2',3],kind:'number'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.n' has 'string' set[1], not 'number'"); // Incorrect `schema`, string.
 
     try {
       v.object({}, 'e', {
@@ -1026,7 +1220,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {s:{fallback:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has 'number' fallback, not 'string' or 'undefined'");
+    et("v.object({}, 'e', {s:{fallback:1,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.s' has 'number' fallback, not 'string' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -1041,7 +1235,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {str:{max:[],kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.str' has 'array' max, not 'number' or 'undefined'");
+    et("v.object({}, 'e', {str:{max:[],kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.str' has 'array' max, not 'number' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -1056,7 +1250,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {S:{min:{}],kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.S' has 'object' min, not 'number' or 'undefined'");
+    et("v.object({}, 'e', {S:{min:{}],kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.S' has 'object' min, not 'number' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -1071,7 +1265,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {STR:{rule:'1',kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.STR' has 'string' rule, not 'object' or 'undefined'");
+    et("v.object({}, 'e', {STR:{rule:'1',kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.STR' has 'string' rule, not 'object' or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -1088,7 +1282,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {_s:{rule:{test:[]},kind:'string'}, _meta:{}})", exc) // @TODO '...has 'array' rule.test...'
+    et("v.object({}, 'e', {_s:{rule:{test:[]},kind:'string'}, _meta:{}})", exc) // @TODO '...has 'array' rule.test...'
     .is("Error: Validate.object() incorrectly invoked: obj(): 'schema._s' has 'object' rule.test, not 'function'");
 
     try {
@@ -1104,7 +1298,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {_:{set:0,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._' has 'number' set, not an array or 'undefined'");
+    et("v.object({}, 'e', {_:{set:0,kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema._' has 'number' set, not an array or 'undefined'");
 
     try {
       v.object({}, 'e', {
@@ -1119,7 +1313,7 @@
       exc = "".concat(e);
     }
 
-    et("v.object( {}, 'e', {string:{set:[1,'2',3],kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.string' has 'number' set[0], not 'string'"); // Boolean ok.
+    et("v.object({}, 'e', {string:{set:[1,'2',3],kind:'string'}, _meta:{}})", exc).is("Error: Validate.object() incorrectly invoked: obj(): 'schema.string' has 'number' set[0], not 'string'"); // Boolean ok.
 
     et("v.object({basic:false}, 'basicBool', {basic:{kind:'boolean'},_meta:{}})", v.object({
       basic: false
@@ -1330,7 +1524,65 @@
         kind: 'boolean'
       }
     })).is(false);
-    et("v.err", v.err).is("obj(): 'A.D.e' of a value is type 'undefined' not 'boolean'"); // Integer ok.
+    et("v.err", v.err).is("obj(): 'A.D.e' of a value is type 'undefined' not 'boolean'"); // Instanceof ok.
+
+    var EmptyClass = /*#__PURE__*/_createClass(function EmptyClass() {
+      _classCallCheck(this, EmptyClass);
+    });
+
+    var emptyClassInst = new EmptyClass();
+    et("v.object(emptyClassInst, 'emptyClassInst', {_meta:{}})", v.object(emptyClassInst, 'emptyClassInst', {
+      _meta: {}
+    })).is(true);
+    et("v.err", v.err).is(null);
+    et("v.object(emptyClassInst, 'emptyClassInst', {_meta:{inst:EmptyClass}})", v.object(emptyClassInst, 'emptyClassInst', {
+      _meta: {
+        inst: EmptyClass
+      }
+    })).is(true);
+    et("v.err", v.err).is(null); // Instanceof invalid.
+
+    var FooBarClass = /*#__PURE__*/_createClass(function FooBarClass() {
+      _classCallCheck(this, FooBarClass);
+
+      _defineProperty(this, "foo", 'bar');
+    });
+
+    var fooBarClassInst = new FooBarClass();
+    et("v.object(fooBarClassInst, 'fooBarClassInst', {_meta:{inst:EmptyClass}})", v.object(fooBarClassInst, 'fooBarClassInst', {
+      _meta: {
+        inst: EmptyClass
+      }
+    })).is(false);
+    et("v.err", v.err).is("obj(): 'fooBarClassInst' is not an instance of 'EmptyClass'");
+    et("v.object(fooBarClassInst, null, {_meta:{inst:EmptyClass}})", v.object(fooBarClassInst, null, {
+      _meta: {
+        inst: EmptyClass
+      }
+    })).is(false);
+    et("v.err", v.err).is("obj(): the top level object is not an instance of 'EmptyClass'");
+    et("v.object({ bar:fooBarClassInst }, 'foo', {_meta:{}, bar:{_meta:{inst:EmptyClass}}})", v.object({
+      bar: fooBarClassInst
+    }, 'foo', {
+      _meta: {},
+      bar: {
+        _meta: {
+          inst: EmptyClass
+        }
+      }
+    })).is(false);
+    et("v.err", v.err).is("obj(): 'foo.bar' is not an instance of 'EmptyClass'");
+    et("v.object({ bar:fooBarClassInst }, null, {_meta:{}, bar:{_meta:{inst:EmptyClass}}})", v.object({
+      bar: fooBarClassInst
+    }, null, {
+      _meta: {},
+      bar: {
+        _meta: {
+          inst: EmptyClass
+        }
+      }
+    })).is(false);
+    et("v.err", v.err).is("obj(): 'bar' of the top level object is not an instance of 'EmptyClass'"); // Integer ok.
 
     et("v.object({basic:1}, 'minMaxInt', {basic:{kind:'integer',min:1,max:1},_meta:{}})", v.object({
       basic: 1
@@ -2195,14 +2447,14 @@
     et("v.schema(100, 'hundred')", v.schema(100, 'hundred')).is(false);
     et("v.err", v.err).is("sma(): 'hundred' is type 'number' not an object");
     et("v.schema([1,2,3])", v.schema([1, 2, 3])).is(false);
-    et("v.err", v.err).is("sma(): unnamed schema is an array not an object"); // Nullish.
+    et("v.err", v.err).is("sma(): the schema is an array not an object"); // Nullish.
 
     et("v.schema(undefined, 'undef')", v.schema(undefined, 'undef')).is(false);
     et("v.err", v.err).is("sma(): 'undef' is type 'undefined' not an object");
     et("v.schema(null, 'empty')", v.schema(null, 'empty')).is(false);
     et("v.err", v.err).is("sma(): 'empty' is null not an object");
     et("v.schema(null)", v.schema(null)).is(false);
-    et("v.err", v.err).is("sma(): unnamed schema is null not an object");
+    et("v.err", v.err).is("sma(): the schema is null not an object");
     et("v.schema([], 'emptyArray')", v.schema([], 'emptyArray')).is(false);
     et("v.err", v.err).is("sma(): 'emptyArray' is an array not an object"); // Schema invalid, basic property errors.
 
@@ -2211,7 +2463,7 @@
     et("v.schema({_meta:[]})", v.schema({
       _meta: []
     })).is(false);
-    et("v.err", v.err).is("sma(): unnamed schema '._meta' is an array not an object");
+    et("v.err", v.err).is("sma(): top level '_meta' of the schema is an array not an object");
     et("v.schema({_meta:null}, 's')", v.schema({
       _meta: null
     }, 's')).is(false);
@@ -2233,7 +2485,7 @@
     et("v.schema({_meta:null})", v.schema({
       _meta: null
     })).is(false);
-    et("v.err", v.err).is("sma(): unnamed schema '._meta' is null not an object");
+    et("v.err", v.err).is("sma(): top level '_meta' of the schema is null not an object");
     et("v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})", v.schema({
       _meta: {},
       a: {
@@ -2296,7 +2548,110 @@
       },
       _meta: {}
     }, 's')).is(false);
-    et("v.err", v.err).is("sma(): 's.outer.inner.kind' not recognised"); // Schema invalid, value properties are never allowed to be `null`.
+    et("v.err", v.err).is("sma(): 's.outer.inner.kind' not recognised"); // Schema’s _meta.inst invalid.
+
+    et("v.schema({_meta:{inst:[]}})", v.schema({
+      _meta: {
+        inst: []
+      }
+    })).is(false);
+    et("v.err", v.err).is("sma(): top level '._meta.inst' of the schema is an array not type 'function'");
+    et("v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:NaN}}}})", v.schema({
+      _meta: {},
+      mid: {
+        _meta: {},
+        inner: {
+          _meta: {
+            inst: NaN
+          }
+        }
+      }
+    })).is(false);
+    et("v.err", v.err).is("sma(): 'mid.inner._meta.inst' of the schema is type 'number' not type 'function'");
+    et("v.schema({_meta:{inst:{}}}, 'checkInstanceof')", v.schema({
+      _meta: {
+        inst: {}
+      }
+    }, 'checkInstanceof')).is(false);
+    et("v.err", v.err).is("sma(): 'checkInstanceof._meta.inst' is type 'object' not type 'function'");
+    et("v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:null}}}}, 'outer')", v.schema({
+      _meta: {},
+      mid: {
+        _meta: {},
+        inner: {
+          _meta: {
+            inst: null
+          }
+        }
+      }
+    }, 'outer')).is(false);
+    et("v.err", v.err).is("sma(): 'outer.mid.inner._meta.inst' is null not type 'function'");
+
+    var UndefinedName = /*#__PURE__*/_createClass(function UndefinedName() {
+      _classCallCheck(this, UndefinedName);
+    });
+
+    _defineProperty(UndefinedName, "name", undefined);
+
+    et("v.schema({_meta:{inst:UndefinedName}})", v.schema({
+      _meta: {
+        inst: UndefinedName
+      }
+    })).is(false);
+    et("v.err", v.err).is("sma(): top level '._meta.inst.name' of the schema is type 'undefined' not 'string'");
+
+    var FunctionName = /*#__PURE__*/_createClass(function FunctionName() {
+      _classCallCheck(this, FunctionName);
+    });
+
+    _defineProperty(FunctionName, "name", function (x) {
+      return x + 1;
+    });
+
+    et("v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:FunctionName}}}})", v.schema({
+      _meta: {},
+      mid: {
+        _meta: {},
+        inner: {
+          _meta: {
+            inst: FunctionName
+          }
+        }
+      }
+    })).is(false);
+    et("v.err", v.err).is("sma(): 'mid.inner._meta.inst.name' of the schema is type 'function' not 'string'");
+
+    var MathObjectName = /*#__PURE__*/_createClass(function MathObjectName() {
+      _classCallCheck(this, MathObjectName);
+    });
+
+    _defineProperty(MathObjectName, "name", Math);
+
+    et("v.schema({_meta:{inst:MathObjectName}}, 'checkInstanceof')", v.schema({
+      _meta: {
+        inst: MathObjectName
+      }
+    }, 'checkInstanceof')).is(false);
+    et("v.err", v.err).is("sma(): 'checkInstanceof._meta.inst.name' is type 'object' not 'string'");
+
+    var ArrayName = /*#__PURE__*/_createClass(function ArrayName() {
+      _classCallCheck(this, ArrayName);
+    });
+
+    _defineProperty(ArrayName, "name", ['a', 'bc']);
+
+    et("v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')", v.schema({
+      _meta: {},
+      mid: {
+        _meta: {},
+        inner: {
+          _meta: {
+            inst: ArrayName
+          }
+        }
+      }
+    }, 'outer')).is(false);
+    et("v.err", v.err).is("sma(): 'outer.mid.inner._meta.inst.name' is an array not 'string'"); // Schema invalid, value properties are never allowed to be `null`.
 
     et("v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')", v.schema({
       BOOL: {
@@ -2638,7 +2993,8 @@
   /* --------------------------------- Import --------------------------------- */
 
 
-  var VERSION = '1.0.1';
+  var NAME = 'Validate';
+  var VERSION = '1.1.0';
   /* ---------------------------------- Tests --------------------------------- */
   // Runs basic tests on Validate.
 
@@ -2646,7 +3002,8 @@
     var et = expect.that;
     expect.section('Validate basics');
     et("typeof Validate // in JavaScript, a class is type 'function'", _typeof(Validate)).is('function');
-    et("Validate.VERSION", Validate.VERSION).is(VERSION);
+    et("Validate.name // minification should not squash '".concat(NAME, "'"), Validate.name).is(NAME);
+    et("Validate.VERSION // make sure we are testing ".concat(VERSION), Validate.VERSION).is(VERSION);
     et("typeof new Validate()", _typeof(new Validate())).is('object');
     et("new Validate()", new Validate()).has({
       err: null,

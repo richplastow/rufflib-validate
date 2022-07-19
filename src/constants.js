@@ -5,6 +5,7 @@
 
 export const A = 'array';
 export const B = 'boolean';
+export const F = 'function';
 export const I = 'integer';
 export const N = 'number';
 export const S = 'string';

@@ -1,5 +1,5 @@
 /**
- * rufflib-validate 1.0.1
+ * rufflib-validate 1.1.0
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -34,6 +34,7 @@ function _type(value, name, typeStr) {
 
 const A = 'array';
 const B = 'boolean';
+const F = 'function';
 const I = 'integer';
 const N = 'number';
 const S = 'string';
@@ -49,6 +50,19 @@ function _validateAgainstSchema(
     schema,  // the schema to validate against
     path=[], // builds up a list of properties, as `_validateAgainstSchema()` recurses
 ) {
+
+    // Do an `instanceof` test, if the `_meta` object contains an `inst` key.
+    if (schema._meta.inst && ! (obj instanceof schema._meta.inst)) {
+        if (! name && path.length === 0)
+            this.err = `${this.prefix}: the top level object is not an instance of '${schema._meta.inst.name}'`;
+        else if (! name)
+            this.err = `${this.prefix}: '${path.join('.')}' of the top level object is not an instance of '${schema._meta.inst.name}'`;
+        else if (path.length === 0)
+            this.err = `${this.prefix}: '${name}' is not an instance of '${schema._meta.inst.name}'`;
+        else
+            this.err = `${this.prefix}: '${name}.${path.join('.')}' is not an instance of '${schema._meta.inst.name}'`;
+        return false;
+    }
 
     // Validate each key/value pair.
     for (let key in schema) {
@@ -474,7 +488,6 @@ function object(value, name, schema) {
     // Check that the `schema` argument is correct.
     // @TODO optionally bypass this, when performance is important
     const isCorrect = this.schema(schema, 'schema');
-    // this.err = checkSchemaCorrectness(schema, 'schema');
     if (! isCorrect) throw Error(`Validate.object() incorrectly invoked: ${this.err}`);
 
     // Validate `value` against the `schema`.
@@ -515,7 +528,7 @@ function checkSchemaCorrectness(sma, name, path) {
     if (sma === null || typeof sma !== O || Array.isArray(sma)) {
         const is = getIs(sma);
         if (! name && path.length === 0)
-            return `unnamed schema is ${is} not an object`;
+            return `the schema is ${is} not an object`;
         if (! name)
             return `'${path.join('.')}' of the schema is ${is} not an object`;
         if (path.length === 0)
@@ -528,12 +541,37 @@ function checkSchemaCorrectness(sma, name, path) {
     if (_meta === null || typeof _meta !== O || Array.isArray(_meta)) {
         const is = getIs(_meta);
         if (! name && path.length === 0)
-            return `unnamed schema '._meta' is ${is} not an object`;
+            return `top level '_meta' of the schema is ${is} not an object`;
         if (! name)
             return `'${path.join('.')}._meta' of the schema is ${is} not an object`;
         if (path.length === 0)
             return `'${name}._meta' is ${is} not an object`;
         return `'${name}.${path.join('.')}._meta' is ${is} not an object`;
+    }
+
+    // If a `_meta.inst` value exists, chack that it is an object with a `name` property.
+    const inst = sma._meta.inst;
+    if (typeof inst !== 'undefined') {
+        if (inst === null || typeof inst !== F || Array.isArray(inst)) {
+            const is = getIs(inst);
+            if (! name && path.length === 0)
+                return `top level '._meta.inst' of the schema is ${is} not type 'function'`;
+            if (! name)
+                return `'${path.join('.')}._meta.inst' of the schema is ${is} not type 'function'`;
+            if (path.length === 0)
+                return `'${name}._meta.inst' is ${is} not type 'function'`;
+            return `'${name}.${path.join('.')}._meta.inst' is ${is} not type 'function'`;
+        }
+        if (typeof inst.name !== 'string') {
+            const is = getIs(inst.name);
+            if (! name && path.length === 0)
+                return `top level '._meta.inst.name' of the schema is ${is} not 'string'`;
+            if (! name)
+                return `'${path.join('.')}._meta.inst.name' of the schema is ${is} not 'string'`;
+            if (path.length === 0)
+                return `'${name}._meta.inst.name' is ${is} not 'string'`;
+            return `'${name}.${path.join('.')}._meta.inst.name' is ${is} not 'string'`;
+        }
     }
 
     // Check each key/value pair.
@@ -769,7 +807,8 @@ function string(value, name, minSetOrRule, max) {
 
 /* --------------------------------- Import --------------------------------- */
 
-const VERSION = '1.0.1';
+const NAME = 'Validate';
+const VERSION = '1.1.0';
 
 
 /* ---------------------------------- Class --------------------------------- */
@@ -792,6 +831,8 @@ const VERSION = '1.0.1';
 //     sayOk(3, true); // ok! (less safe, but faster)
 //
 class Validate {
+    static name = NAME; // make sure minification doesn’t squash the `name` property
+    static VERSION = VERSION;
 
     constructor (prefix, skip) {
         this.err = null;
@@ -800,8 +841,6 @@ class Validate {
     }
 
 }
-
-Validate.VERSION = VERSION;
 
 Validate.prototype._type = _type;
 Validate.prototype._validateAgainstSchema = _validateAgainstSchema;

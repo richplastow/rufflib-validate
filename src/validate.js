@@ -5,7 +5,8 @@
 
 /* --------------------------------- Import --------------------------------- */
 
-const VERSION = '1.0.1';
+const NAME = 'Validate';
+const VERSION = '1.1.0';
 
 import _type from './methods/_type.js';
 import _validateAgainstSchema from './methods/_validate-against-schema.js';
@@ -39,6 +40,8 @@ import string from './methods/string.js';
 //     sayOk(3, true); // ok! (less safe, but faster)
 //
 export default class Validate {
+    static name = NAME; // make sure minification doesn’t squash the `name` property
+    static VERSION = VERSION;
 
     constructor (prefix, skip) {
         this.err = null;
@@ -47,8 +50,6 @@ export default class Validate {
     }
 
 }
-
-Validate.VERSION = VERSION;
 
 Validate.prototype._type = _type;
 Validate.prototype._validateAgainstSchema = _validateAgainstSchema;
@@ -71,7 +72,9 @@ export function test(expect, Validate) {
     expect.section('Validate basics');
     et(`typeof Validate // in JavaScript, a class is type 'function'`,
         typeof Validate).is('function');
-    et(`Validate.VERSION`,
+    et(`Validate.name // minification should not squash '${NAME}'`,
+        Validate.name).is(NAME);
+    et(`Validate.VERSION // make sure we are testing ${VERSION}`,
         Validate.VERSION).is(VERSION);
     et(`typeof new Validate()`,
         typeof new Validate()).is('object');

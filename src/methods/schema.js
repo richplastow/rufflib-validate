@@ -1,6 +1,6 @@
 // rufflib-validate/src/methods/schema.js
 
-import { A, B, I, N, O, S, U } from '../constants.js';
+import { A, B, F, I, N, O, S, U } from '../constants.js';
 
 
 /* --------------------------------- Method --------------------------------- */
@@ -32,7 +32,7 @@ function checkSchemaCorrectness(sma, name, path) {
     if (sma === null || typeof sma !== O || Array.isArray(sma)) {
         const is = getIs(sma);
         if (! name && path.length === 0)
-            return `unnamed schema is ${is} not an object`;
+            return `the schema is ${is} not an object`;
         if (! name)
             return `'${path.join('.')}' of the schema is ${is} not an object`;
         if (path.length === 0)
@@ -45,12 +45,37 @@ function checkSchemaCorrectness(sma, name, path) {
     if (_meta === null || typeof _meta !== O || Array.isArray(_meta)) {
         const is = getIs(_meta);
         if (! name && path.length === 0)
-            return `unnamed schema '._meta' is ${is} not an object`;
+            return `top level '_meta' of the schema is ${is} not an object`;
         if (! name)
             return `'${path.join('.')}._meta' of the schema is ${is} not an object`;
         if (path.length === 0)
             return `'${name}._meta' is ${is} not an object`;
         return `'${name}.${path.join('.')}._meta' is ${is} not an object`;
+    }
+
+    // If a `_meta.inst` value exists, chack that it is an object with a `name` property.
+    const inst = sma._meta.inst;
+    if (typeof inst !== 'undefined') {
+        if (inst === null || typeof inst !== F || Array.isArray(inst)) {
+            const is = getIs(inst);
+            if (! name && path.length === 0)
+                return `top level '._meta.inst' of the schema is ${is} not type 'function'`;
+            if (! name)
+                return `'${path.join('.')}._meta.inst' of the schema is ${is} not type 'function'`;
+            if (path.length === 0)
+                return `'${name}._meta.inst' is ${is} not type 'function'`;
+            return `'${name}.${path.join('.')}._meta.inst' is ${is} not type 'function'`;
+        }
+        if (typeof inst.name !== 'string') {
+            const is = getIs(inst.name);
+            if (! name && path.length === 0)
+                return `top level '._meta.inst.name' of the schema is ${is} not 'string'`;
+            if (! name)
+                return `'${path.join('.')}._meta.inst.name' of the schema is ${is} not 'string'`;
+            if (path.length === 0)
+                return `'${name}._meta.inst.name' is ${is} not 'string'`;
+            return `'${name}.${path.join('.')}._meta.inst.name' is ${is} not 'string'`;
+        }
     }
 
     // Check each key/value pair.
@@ -224,7 +249,7 @@ export function test(expect, Validate) {
     et(`v.err`, v.err).is(`sma(): 'hundred' is type 'number' not an object`);
     et(`v.schema([1,2,3])`,
         v.schema([1,2,3])).is(false);
-    et(`v.err`, v.err).is(`sma(): unnamed schema is an array not an object`);
+    et(`v.err`, v.err).is(`sma(): the schema is an array not an object`);
 
     // Nullish.
     et(`v.schema(undefined, 'undef')`,
@@ -235,7 +260,7 @@ export function test(expect, Validate) {
     et(`v.err`, v.err).is(`sma(): 'empty' is null not an object`);
     et(`v.schema(null)`,
         v.schema(null)).is(false);
-    et(`v.err`, v.err).is(`sma(): unnamed schema is null not an object`);
+    et(`v.err`, v.err).is(`sma(): the schema is null not an object`);
     et(`v.schema([], 'emptyArray')`,
         v.schema([], 'emptyArray')).is(false);
     et(`v.err`, v.err).is(`sma(): 'emptyArray' is an array not an object`);
@@ -246,7 +271,7 @@ export function test(expect, Validate) {
     et(`v.err`, v.err).is(`sma(): 's._meta' is type 'undefined' not an object`);
     et(`v.schema({_meta:[]})`,
         v.schema({_meta:[]})).is(false);
-    et(`v.err`, v.err).is(`sma(): unnamed schema '._meta' is an array not an object`);
+    et(`v.err`, v.err).is(`sma(): top level '_meta' of the schema is an array not an object`);
     et(`v.schema({_meta:null}, 's')`,
         v.schema({_meta:null}, 's')).is(false);
     et(`v.err`, v.err).is(`sma(): 's._meta' is null not an object`);
@@ -258,7 +283,7 @@ export function test(expect, Validate) {
     et(`v.err`, v.err).is(`sma(): 'foo._meta' of the schema is an array not an object`);
     et(`v.schema({_meta:null})`,
         v.schema({_meta:null})).is(false);
-    et(`v.err`, v.err).is(`sma(): unnamed schema '._meta' is null not an object`);
+    et(`v.err`, v.err).is(`sma(): top level '_meta' of the schema is null not an object`);
     et(`v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})`,
         v.schema({_meta:{},a:{_meta:{},b:{_meta:{}}},c:{_meta:{},d:{_meta:{}},e:{_meta:[]}}})).is(false);
     et(`v.err`, v.err).is(`sma(): 'c.e._meta' of the schema is an array not an object`);
@@ -283,6 +308,36 @@ export function test(expect, Validate) {
     et(`v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')`,
         v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')).is(false);
     et(`v.err`, v.err).is(`sma(): 's.outer.inner.kind' not recognised`);
+
+    // Schema’s _meta.inst invalid.
+    et(`v.schema({_meta:{inst:[]}})`,
+        v.schema({_meta:{inst:[]}})).is(false);
+    et(`v.err`, v.err).is(`sma(): top level '._meta.inst' of the schema is an array not type 'function'`);
+    et(`v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:NaN}}}})`,
+        v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:NaN}}}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'mid.inner._meta.inst' of the schema is type 'number' not type 'function'`);
+    et(`v.schema({_meta:{inst:{}}}, 'checkInstanceof')`,
+        v.schema({_meta:{inst:{}}}, 'checkInstanceof')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'checkInstanceof._meta.inst' is type 'object' not type 'function'`);
+    et(`v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:null}}}}, 'outer')`,
+        v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:null}}}}, 'outer')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'outer.mid.inner._meta.inst' is null not type 'function'`);
+    class UndefinedName { static name = undefined }
+    et(`v.schema({_meta:{inst:UndefinedName}})`,
+        v.schema({_meta:{inst:UndefinedName}})).is(false);
+    et(`v.err`, v.err).is(`sma(): top level '._meta.inst.name' of the schema is type 'undefined' not 'string'`);
+    class FunctionName { static name = x => x + 1 }
+    et(`v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:FunctionName}}}})`,
+        v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:FunctionName}}}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'mid.inner._meta.inst.name' of the schema is type 'function' not 'string'`);
+    class MathObjectName { static name = Math }
+    et(`v.schema({_meta:{inst:MathObjectName}}, 'checkInstanceof')`,
+        v.schema({_meta:{inst:MathObjectName}}, 'checkInstanceof')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'checkInstanceof._meta.inst.name' is type 'object' not 'string'`);
+    class ArrayName { static name = ['a','bc'] }
+    et(`v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')`,
+        v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')).is(false);
+    et(`v.err`, v.err).is(`sma(): 'outer.mid.inner._meta.inst.name' is an array not 'string'`);
 
     // Schema invalid, value properties are never allowed to be `null`.
     et(`v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')`,

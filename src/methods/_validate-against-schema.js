@@ -10,6 +10,19 @@ export default function _validateAgainstSchema(
     path=[], // builds up a list of properties, as `_validateAgainstSchema()` recurses
 ) {
 
+    // Do an `instanceof` test, if the `_meta` object contains an `inst` key.
+    if (schema._meta.inst && ! (obj instanceof schema._meta.inst)) {
+        if (! name && path.length === 0)
+            this.err = `${this.prefix}: the top level object is not an instance of '${schema._meta.inst.name}'`;
+        else if (! name)
+            this.err = `${this.prefix}: '${path.join('.')}' of the top level object is not an instance of '${schema._meta.inst.name}'`;
+        else if (path.length === 0)
+            this.err = `${this.prefix}: '${name}' is not an instance of '${schema._meta.inst.name}'`;
+        else
+            this.err = `${this.prefix}: '${name}.${path.join('.')}' is not an instance of '${schema._meta.inst.name}'`;
+        return false;
+    }
+
     // Validate each key/value pair.
     for (let key in schema) {
         if (key === '_meta') continue; // ignore the special `_meta` property
