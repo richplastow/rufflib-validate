@@ -6,13 +6,14 @@
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 
 import _type from './methods/_type.js';
 import _validateAgainstSchema from './methods/_validate-against-schema.js';
 
 import array from './methods/array.js';
 import boolean from './methods/boolean.js';
+import class_ from './methods/class.js';
 import integer from './methods/integer.js';
 import number from './methods/number.js';
 import object from './methods/object.js';
@@ -56,6 +57,7 @@ Validate.prototype._validateAgainstSchema = _validateAgainstSchema;
 
 Validate.prototype.array = array;
 Validate.prototype.boolean = boolean;
+Validate.prototype.class = class_;
 Validate.prototype.integer = integer;
 Validate.prototype.number = number;
 Validate.prototype.object = object;

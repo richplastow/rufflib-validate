@@ -1,5 +1,5 @@
 /**
- * rufflib-validate 1.1.0
+ * rufflib-validate 1.2.0
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -344,6 +344,41 @@ function boolean(value, name) {
     if (this.skip) return true;
 
     return this._type(value, name, 'boolean')
+}
+
+// rufflib-validate/src/methods/class.js
+
+
+/* --------------------------------- Method --------------------------------- */
+
+// Public method which validates a class.
+// Note the trailing underscore, because `class` is a reserved word in JavaScript.
+function class_(value, name, schema) {
+    this.err = null;
+    if (this.skip) return true;
+
+    typeof name === S
+        ? name.slice(-11) === ' of a value' // @TODO improve this slow and arbitrary hack!
+            ? name
+            : `'${name}'`
+        : 'a value'
+    ;
+
+    // Deal with a value which is not a function.
+    if (! this._type(value, name, 'function')) return false;
+
+    // Short-circuit if only two arguments were supplied.
+    if (typeof schema === U) return true;
+
+    // Check that the `schema` argument is correct.
+    // @TODO optionally bypass this, when performance is important
+    const isCorrect = this.schema(schema, 'schema');
+    if (! isCorrect) throw Error(`Validate.object() incorrectly invoked: ${this.err}`);
+
+    // Validate `value` against the `schema`.
+    if (! this._validateAgainstSchema(value, name, schema)) return false;
+
+    return true;
 }
 
 // rufflib-validate/src/methods/integer.js
@@ -808,7 +843,7 @@ function string(value, name, minSetOrRule, max) {
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 
 
 /* ---------------------------------- Class --------------------------------- */
@@ -847,6 +882,7 @@ Validate.prototype._validateAgainstSchema = _validateAgainstSchema;
 
 Validate.prototype.array = array;
 Validate.prototype.boolean = boolean;
+Validate.prototype.class = class_;
 Validate.prototype.integer = integer;
 Validate.prototype.number = number;
 Validate.prototype.object = object;

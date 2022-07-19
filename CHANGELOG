@@ -4,5 +4,8 @@ initial release
 20220718^RP 1.0.1
 upgrades RuffLIB Expect to 2.0.0
 
-20220718^RP 1.1.0
+20220719^RP 1.1.0
 adds _meta.inst, to validate using instanceof
+
+20220719^RP 1.2.0
+adds the class() method

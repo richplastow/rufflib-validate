@@ -310,6 +310,9 @@ export function test(expect, Validate) {
     et(`v.err`, v.err).is(null);
 
     // Instanceof invalid.
+    et(`v.object({}, 'plainObject', {_meta:{inst:EmptyClass}})`,
+        v.object({}, 'plainObject', {_meta:{inst:EmptyClass}})).is(false);
+    et(`v.err`, v.err).is(`obj(): 'plainObject' is not an instance of 'EmptyClass'`);
     class FooBarClass { foo = 'bar' };
     const fooBarClassInst = new FooBarClass();
     et(`v.object(fooBarClassInst, 'fooBarClassInst', {_meta:{inst:EmptyClass}})`,

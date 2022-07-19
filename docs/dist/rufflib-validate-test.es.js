@@ -1,5 +1,5 @@
 /**
- * Unit tests for rufflib-validate 1.1.0
+ * Unit tests for rufflib-validate 1.2.0
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -9,7 +9,7 @@
 // rufflib-validate/src/methods/array.js
 
 // Tests Validate.array()
-function test$7(expect, Validate) {
+function test$8(expect, Validate) {
     const et = expect.that;
 
     expect.section('array()');
@@ -313,7 +313,7 @@ function test$7(expect, Validate) {
 // rufflib-validate/src/methods/boolean.js
 
 // Tests Validate.boolean()
-function test$6(expect, Validate) {
+function test$7(expect, Validate) {
     const et = expect.that;
 
     expect.section('boolean()');
@@ -343,6 +343,59 @@ function test$6(expect, Validate) {
     et(`v.boolean([1,2,3], 'array')`,
         v.boolean([1,2,3], 'array')).is(false);
     et(`v.err`, v.err).is(`bool(): 'array' is an array not type 'boolean'`);
+}
+
+// rufflib-validate/src/methods/class.js
+
+
+/* ---------------------------------- Tests --------------------------------- */
+
+// Tests Validate.class()
+function test$6(expect, Validate) {
+    const et = expect.that;
+
+    expect.section('class()');
+
+    const v = new Validate('fnc()');
+
+    // Basic ok.
+    class EmptyClass {}
+    class FooBarClass { static foo = 'bar' }
+    et(`v.class(EmptyClass, 'EmptyClass')`,
+        v.class(EmptyClass, 'EmptyClass')).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.class(Error, 'nativeError')`,
+        v.class(Error, 'nativeError')).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.class(Array, 'nativeArray', {_meta:{}, length:{ kind:'number' }})`,
+        v.class(Array, 'nativeArray', {_meta:{}, length:{ kind:'number' }})).is(true);
+    et(`v.err`, v.err).is(null);
+    et(`v.class(FooBarClass, 'FooBarClass', {_meta:{}, foo:{ kind:'string', rule:/^bar$/ }})`,
+        v.class(FooBarClass, 'FooBarClass', {_meta:{}, foo:{ kind:'string', rule:/^bar$/ }})).is(true);
+    et(`v.err`, v.err).is(null);
+
+    // Basic invalid.
+    et(`v.class(undefined, 'undef')`,
+        v.class(undefined, 'undef')).is(false);
+    et(`v.err`, v.err).is(`fnc(): 'undef' is type 'undefined' not 'function'`);
+    et(`v.class(null)`,
+        v.class(null)).is(false);
+    et(`v.err`, v.err).is(`fnc(): a value is null not type 'function'`);
+    et(`v.class(100, 'hundred')`,
+        v.class(100, 'hundred')).is(false);
+    et(`v.err`, v.err).is(`fnc(): 'hundred' is type 'number' not 'function'`);
+    et(`v.class([1,2,3])`,
+        v.class([1,2,3])).is(false);
+    et(`v.err`, v.err).is(`fnc(): a value is an array not type 'function'`);
+    et(`v.class(FooBarClass, 'FooBarClass', {_meta:{}, foo:{ kind:'string', rule:/^ABC$/ }})`,
+        v.class(FooBarClass, 'FooBarClass', {_meta:{}, foo:{ kind:'string', rule:/^ABC$/ }})).is(false);
+    et(`v.err`, v.err).is(`fnc(): 'FooBarClass.foo' "bar" fails /^ABC$/`);
+    et(`v.class(EmptyClass, undefined, {_meta:{}, no_such_prop:{ kind:'boolean' }})`,
+        v.class(EmptyClass, undefined, {_meta:{}, no_such_prop:{ kind:'boolean' }})).is(false);
+    et(`v.err`, v.err).is(`fnc(): 'no_such_prop' of a value is type 'undefined' not 'boolean'`);
+
+    // Beyond this, `Validate.class()` behaves line `Validate.object()`,
+    // which has plenty more tests.
 }
 
 // rufflib-validate/src/methods/integer.js
@@ -857,6 +910,9 @@ function test$3(expect, Validate) {
     et(`v.err`, v.err).is(null);
 
     // Instanceof invalid.
+    et(`v.object({}, 'plainObject', {_meta:{inst:EmptyClass}})`,
+        v.object({}, 'plainObject', {_meta:{inst:EmptyClass}})).is(false);
+    et(`v.err`, v.err).is(`obj(): 'plainObject' is not an instance of 'EmptyClass'`);
     class FooBarClass { foo = 'bar' }    const fooBarClassInst = new FooBarClass();
     et(`v.object(fooBarClassInst, 'fooBarClassInst', {_meta:{inst:EmptyClass}})`,
         v.object(fooBarClassInst, 'fooBarClassInst', {_meta:{inst:EmptyClass}})).is(false);
@@ -1416,7 +1472,7 @@ function test$1(expect, Validate) {
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 
 
 /* ---------------------------------- Tests --------------------------------- */
@@ -1470,6 +1526,7 @@ function validateTest(expect, Validate) {
 
     test(expect, Validate);
 
+    test$8(expect, Validate);
     test$7(expect, Validate);
     test$6(expect, Validate);
     test$5(expect, Validate);

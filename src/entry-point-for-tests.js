@@ -7,6 +7,7 @@ import { test as testValidate } from './validate.js';
 
 import { test as testArray } from './methods/array.js';
 import { test as testBoolean } from './methods/boolean.js';
+import { test as testClass } from './methods/class.js';
 import { test as testInteger } from './methods/integer.js';
 import { test as testNumber } from './methods/number.js';
 import { test as testObject } from './methods/object.js';
@@ -21,6 +22,7 @@ export default function validateTest(expect, Validate) {
 
     testArray(expect, Validate);
     testBoolean(expect, Validate);
+    testClass(expect, Validate);
     testInteger(expect, Validate);
     testNumber(expect, Validate);
     testObject(expect, Validate);
