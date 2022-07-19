@@ -1,5 +1,5 @@
 /**
- * rufflib-validate 1.2.0
+ * rufflib-validate 1.3.0
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -373,7 +373,7 @@ function class_(value, name, schema) {
     // Check that the `schema` argument is correct.
     // @TODO optionally bypass this, when performance is important
     const isCorrect = this.schema(schema, 'schema');
-    if (! isCorrect) throw Error(`Validate.object() incorrectly invoked: ${this.err}`);
+    if (! isCorrect) throw Error(`Validate.class() incorrectly invoked: ${this.err}`);
 
     // Validate `value` against the `schema`.
     if (! this._validateAgainstSchema(value, name, schema)) return false;
@@ -537,12 +537,23 @@ function object(value, name, schema) {
 /* --------------------------------- Method --------------------------------- */
 
 // Public method which validates a schema object.
-function schema(value, name) {
+// The optional `metaSchema` argument defines properties which `_meta` objects
+// must contain. If `metaSchema` is omitted, `_meta` can be an empty object.
+function schema(value, name, metaSchema) {
     this.err = null;
     if (this.skip) return true;
 
+    // If present, check that the `metaSchema` is a plain object.
+    if (typeof metaSchema !== U) {
+        if (metaSchema === null || typeof metaSchema !== O || Array.isArray(metaSchema)) {
+            const is = getIs(metaSchema);
+            throw Error(`Validate.schema() incorrectly invoked: ${this.prefix}: `
+                + `optional 'metaSchema' is ${is} not an object`);
+        }
+    }
+
     // Recursively check that `value` is a correct `schema`.
-    const err = checkSchemaCorrectness(value, name, []);
+    const err = checkSchemaCorrectness(value, name, [], metaSchema, this);
     if (err) {
         this.err = `${this.prefix}: ${err}`;
         return false;
@@ -557,7 +568,8 @@ function schema(value, name) {
 // Checks that a given `schema` object is correctly formed.
 // Returns a string if the schema is incorrect, or `null` if it’s correct.
 // @TODO guard against cyclic objects
-function checkSchemaCorrectness(sma, name, path) {
+// @TODO make this into a private method, _checkSchemaCorrectness(), to avoid `that`
+function checkSchemaCorrectness(sma, name, path, metaSchema, that) {
 
     // Check that the `schema` is a plain object.
     if (sma === null || typeof sma !== O || Array.isArray(sma)) {
@@ -584,7 +596,8 @@ function checkSchemaCorrectness(sma, name, path) {
         return `'${name}.${path.join('.')}._meta' is ${is} not an object`;
     }
 
-    // If a `_meta.inst` value exists, chack that it is an object with a `name` property.
+    // If the special `_meta.inst` value exists, chack that it is an object with
+    // a `name` property.
     const inst = sma._meta.inst;
     if (typeof inst !== 'undefined') {
         if (inst === null || typeof inst !== F || Array.isArray(inst)) {
@@ -609,19 +622,36 @@ function checkSchemaCorrectness(sma, name, path) {
         }
     }
 
+    // Use `metaSchema` (if provided) to validate the `_meta` object.
+    // @TODO
+
     // Check each key/value pair.
     for (let key in sma) {
-        if (key === '_meta') continue; // ignore the special `_meta` property
-
         // Every value must be a plain object.
         const value = sma[key];
         if (value === null || typeof value !== O || Array.isArray(value)) {
             return fmtErr(name, path, key, `is ${getIs(value)} not an object`);
         }
 
+        // Validate the special `_meta` property.
+        if (key === '_meta') {
+            if (metaSchema) {
+                const n = name && path.length
+                    ? `${name}.${path.join('.')}._meta`
+                    : name
+                        ? `${name}._meta`
+                        : path.length
+                            ? `${path.join('.')}._meta`
+                            : `top level _meta`;
+                if (! that.object(value, n, metaSchema))
+                    return that.err.slice(that.prefix.length + 2);
+            }
+            continue;
+        }
+
         // Deal with a sub-schema.
         if (value._meta) {
-            const err = checkSchemaCorrectness(value, name, [...path, key]);
+            const err = checkSchemaCorrectness(value, name, [...path, key], metaSchema, that);
             if (err) return err;
             continue;
         }
@@ -843,7 +873,7 @@ function string(value, name, minSetOrRule, max) {
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 
 
 /* ---------------------------------- Class --------------------------------- */

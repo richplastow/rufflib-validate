@@ -1,5 +1,5 @@
 /**
- * Unit tests for rufflib-validate 1.2.0
+ * Unit tests for rufflib-validate 1.3.0
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -1143,6 +1143,8 @@ function test$2(expect, Validate) {
     expect.section('schema()');
 
     const v = new Validate('sma()');
+    const OK = 'Did not encounter an exception';
+    let exc = OK;
 
     // Basic ok.
     et(`v.schema({_meta:{}}, 'empty')`,
@@ -1170,6 +1172,20 @@ function test$2(expect, Validate) {
     et(`v.schema([], 'emptyArray')`,
         v.schema([], 'emptyArray')).is(false);
     et(`v.err`, v.err).is(`sma(): 'emptyArray' is an array not an object`);
+
+    // Incorrect `metaSchema`.
+    try{v.schema({_meta:{}}, 's', 123); exc = OK; } catch (e) { exc = `${e}`; }
+    et(`v.object({_meta:{}}, 's', 123)`, exc)
+        .is(`Error: Validate.schema() incorrectly invoked: sma(): `
+          + `optional 'metaSchema' is type 'number' not an object`);
+    try{v.schema({_meta:{}}, undefined, []); exc = OK; } catch (e) { exc = `${e}`; }
+    et(`v.object({_meta:{}}, undefined, [])`, exc)
+        .is(`Error: Validate.schema() incorrectly invoked: sma(): `
+          + `optional 'metaSchema' is an array not an object`);
+    try{v.schema({_meta:{}}, 's', {}); exc = OK; } catch (e) { exc = `${e}`; }
+    et(`v.object({_meta:{}}, 's', {})`, exc) // @TODO make it clearer what went wrong, for the developer
+        .is(`Error: Validate.object() incorrectly invoked: sma(): `
+          + `'schema._meta' is type 'undefined' not an object`);
 
     // Schema invalid, basic property errors.
     et(`v.schema({}, 's')`,
@@ -1215,7 +1231,7 @@ function test$2(expect, Validate) {
         v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')).is(false);
     et(`v.err`, v.err).is(`sma(): 's.outer.inner.kind' not recognised`);
 
-    // Schema’s _meta.inst invalid.
+    // Invalid because of schema’s _meta.inst.
     et(`v.schema({_meta:{inst:[]}})`,
         v.schema({_meta:{inst:[]}})).is(false);
     et(`v.err`, v.err).is(`sma(): top level '._meta.inst' of the schema is an array not type 'function'`);
@@ -1244,6 +1260,25 @@ function test$2(expect, Validate) {
     et(`v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')`,
         v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')).is(false);
     et(`v.err`, v.err).is(`sma(): 'outer.mid.inner._meta.inst.name' is an array not 'string'`);
+
+    // Invalid because of metaSchema.
+    et(`v.schema({_meta:{}}, 's', {_meta:{},foo:{kind:'string'}})`,
+        v.schema({_meta:{}}, 's', {_meta:{},foo:{kind:'string'}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 's._meta.foo' is type 'undefined' not 'string'`);
+    et(`v.schema({_meta:{foo:{bar:1.25}}}, undefined, {_meta:{},foo:{_meta:{},bar:{kind:'integer'}}})`,
+        v.schema({_meta:{foo:{bar:1.25}}}, undefined, {_meta:{},foo:{_meta:{},bar:{kind:'integer'}}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'top level _meta.foo.bar' 1.25 is not an integer`);
+    et(`v.schema({_meta:{foo:'ok'},sub:{_meta:{foo:''}}}, 's', {_meta:{},foo:{kind:'string',min:1}})`,
+        v.schema({_meta:{foo:'ok'},sub:{_meta:{foo:''}}}, 's', {_meta:{},foo:{kind:'string',min:1}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.sub._meta.foo' length 0 is < 1`);
+    et(`v.schema({_meta:{foo:'ok'},sub:{_meta:{FOO:'a'}}}, undefined, {_meta:{},foo:{kind:'string'}})`,
+        v.schema({_meta:{foo:'ok'},sub:{_meta:{FOO:'a'}}}, undefined, {_meta:{},foo:{kind:'string'}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'sub._meta.foo' is type 'undefined' not 'string'`);
+
+    // Passes metaSchema.
+    et(`v.schema({_meta:{}}, 's', {_meta:{}})`,
+        v.schema({_meta:{}}, 's', {_meta:{}})).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Schema invalid, value properties are never allowed to be `null`.
     et(`v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')`,
@@ -1472,7 +1507,7 @@ function test$1(expect, Validate) {
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 
 
 /* ---------------------------------- Tests --------------------------------- */

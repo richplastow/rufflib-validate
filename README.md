@@ -2,7 +2,7 @@
 
 __A RuffLIB library for succinctly validating JavaScript values.__
 
-▶&nbsp; __Version:__ 1.2.0  
+▶&nbsp; __Version:__ 1.3.0  
 ▶&nbsp; __Homepage:__ <https://richplastow.com/rufflib-validate>  
 ▶&nbsp; __NPM:__ <https://www.npmjs.com/package/rufflib-validate>  
 ▶&nbsp; __Repo:__ <https://github.com/richplastow/rufflib-validate>  

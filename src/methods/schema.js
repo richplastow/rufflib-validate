@@ -6,12 +6,23 @@ import { A, B, F, I, N, O, S, U } from '../constants.js';
 /* --------------------------------- Method --------------------------------- */
 
 // Public method which validates a schema object.
-export default function schema(value, name) {
+// The optional `metaSchema` argument defines properties which `_meta` objects
+// must contain. If `metaSchema` is omitted, `_meta` can be an empty object.
+export default function schema(value, name, metaSchema) {
     this.err = null;
     if (this.skip) return true;
 
+    // If present, check that the `metaSchema` is a plain object.
+    if (typeof metaSchema !== U) {
+        if (metaSchema === null || typeof metaSchema !== O || Array.isArray(metaSchema)) {
+            const is = getIs(metaSchema);
+            throw Error(`Validate.schema() incorrectly invoked: ${this.prefix}: `
+                + `optional 'metaSchema' is ${is} not an object`);
+        }
+    }
+
     // Recursively check that `value` is a correct `schema`.
-    const err = checkSchemaCorrectness(value, name, []);
+    const err = checkSchemaCorrectness(value, name, [], metaSchema, this);
     if (err) {
         this.err = `${this.prefix}: ${err}`;
         return false;
@@ -26,7 +37,8 @@ export default function schema(value, name) {
 // Checks that a given `schema` object is correctly formed.
 // Returns a string if the schema is incorrect, or `null` if it’s correct.
 // @TODO guard against cyclic objects
-function checkSchemaCorrectness(sma, name, path) {
+// @TODO make this into a private method, _checkSchemaCorrectness(), to avoid `that`
+function checkSchemaCorrectness(sma, name, path, metaSchema, that) {
 
     // Check that the `schema` is a plain object.
     if (sma === null || typeof sma !== O || Array.isArray(sma)) {
@@ -53,7 +65,8 @@ function checkSchemaCorrectness(sma, name, path) {
         return `'${name}.${path.join('.')}._meta' is ${is} not an object`;
     }
 
-    // If a `_meta.inst` value exists, chack that it is an object with a `name` property.
+    // If the special `_meta.inst` value exists, chack that it is an object with
+    // a `name` property.
     const inst = sma._meta.inst;
     if (typeof inst !== 'undefined') {
         if (inst === null || typeof inst !== F || Array.isArray(inst)) {
@@ -78,19 +91,36 @@ function checkSchemaCorrectness(sma, name, path) {
         }
     }
 
+    // Use `metaSchema` (if provided) to validate the `_meta` object.
+    // @TODO
+
     // Check each key/value pair.
     for (let key in sma) {
-        if (key === '_meta') continue; // ignore the special `_meta` property
-
         // Every value must be a plain object.
         const value = sma[key];
         if (value === null || typeof value !== O || Array.isArray(value)) {
             return fmtErr(name, path, key, `is ${getIs(value)} not an object`);
         }
 
+        // Validate the special `_meta` property.
+        if (key === '_meta') {
+            if (metaSchema) {
+                const n = name && path.length
+                    ? `${name}.${path.join('.')}._meta`
+                    : name
+                        ? `${name}._meta`
+                        : path.length
+                            ? `${path.join('.')}._meta`
+                            : `top level _meta`
+                if (! that.object(value, n, metaSchema))
+                    return that.err.slice(that.prefix.length + 2);
+            }
+            continue;
+        }
+
         // Deal with a sub-schema.
         if (value._meta) {
-            const err = checkSchemaCorrectness(value, name, [...path, key]);
+            const err = checkSchemaCorrectness(value, name, [...path, key], metaSchema, that);
             if (err) return err;
             continue;
         }
@@ -237,6 +267,8 @@ export function test(expect, Validate) {
     expect.section('schema()');
 
     const v = new Validate('sma()');
+    const OK = 'Did not encounter an exception';
+    let exc = OK;
 
     // Basic ok.
     et(`v.schema({_meta:{}}, 'empty')`,
@@ -264,6 +296,20 @@ export function test(expect, Validate) {
     et(`v.schema([], 'emptyArray')`,
         v.schema([], 'emptyArray')).is(false);
     et(`v.err`, v.err).is(`sma(): 'emptyArray' is an array not an object`);
+
+    // Incorrect `metaSchema`.
+    try{v.schema({_meta:{}}, 's', 123); exc = OK } catch (e) { exc = `${e}` }
+    et(`v.object({_meta:{}}, 's', 123)`, exc)
+        .is(`Error: Validate.schema() incorrectly invoked: sma(): `
+          + `optional 'metaSchema' is type 'number' not an object`);
+    try{v.schema({_meta:{}}, undefined, []); exc = OK } catch (e) { exc = `${e}` }
+    et(`v.object({_meta:{}}, undefined, [])`, exc)
+        .is(`Error: Validate.schema() incorrectly invoked: sma(): `
+          + `optional 'metaSchema' is an array not an object`);
+    try{v.schema({_meta:{}}, 's', {}); exc = OK } catch (e) { exc = `${e}` }
+    et(`v.object({_meta:{}}, 's', {})`, exc) // @TODO make it clearer what went wrong, for the developer
+        .is(`Error: Validate.object() incorrectly invoked: sma(): `
+          + `'schema._meta' is type 'undefined' not an object`);
 
     // Schema invalid, basic property errors.
     et(`v.schema({}, 's')`,
@@ -309,7 +355,7 @@ export function test(expect, Validate) {
         v.schema({outer:{_meta:{},inner:{}}, _meta:{}}, 's')).is(false);
     et(`v.err`, v.err).is(`sma(): 's.outer.inner.kind' not recognised`);
 
-    // Schema’s _meta.inst invalid.
+    // Invalid because of schema’s _meta.inst.
     et(`v.schema({_meta:{inst:[]}})`,
         v.schema({_meta:{inst:[]}})).is(false);
     et(`v.err`, v.err).is(`sma(): top level '._meta.inst' of the schema is an array not type 'function'`);
@@ -338,6 +384,25 @@ export function test(expect, Validate) {
     et(`v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')`,
         v.schema({_meta:{},mid:{_meta:{},inner:{_meta:{inst:ArrayName}}}}, 'outer')).is(false);
     et(`v.err`, v.err).is(`sma(): 'outer.mid.inner._meta.inst.name' is an array not 'string'`);
+
+    // Invalid because of metaSchema.
+    et(`v.schema({_meta:{}}, 's', {_meta:{},foo:{kind:'string'}})`,
+        v.schema({_meta:{}}, 's', {_meta:{},foo:{kind:'string'}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 's._meta.foo' is type 'undefined' not 'string'`);
+    et(`v.schema({_meta:{foo:{bar:1.25}}}, undefined, {_meta:{},foo:{_meta:{},bar:{kind:'integer'}}})`,
+        v.schema({_meta:{foo:{bar:1.25}}}, undefined, {_meta:{},foo:{_meta:{},bar:{kind:'integer'}}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'top level _meta.foo.bar' 1.25 is not an integer`);
+    et(`v.schema({_meta:{foo:'ok'},sub:{_meta:{foo:''}}}, 's', {_meta:{},foo:{kind:'string',min:1}})`,
+        v.schema({_meta:{foo:'ok'},sub:{_meta:{foo:''}}}, 's', {_meta:{},foo:{kind:'string',min:1}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 's.sub._meta.foo' length 0 is < 1`);
+    et(`v.schema({_meta:{foo:'ok'},sub:{_meta:{FOO:'a'}}}, undefined, {_meta:{},foo:{kind:'string'}})`,
+        v.schema({_meta:{foo:'ok'},sub:{_meta:{FOO:'a'}}}, undefined, {_meta:{},foo:{kind:'string'}})).is(false);
+    et(`v.err`, v.err).is(`sma(): 'sub._meta.foo' is type 'undefined' not 'string'`);
+
+    // Passes metaSchema.
+    et(`v.schema({_meta:{}}, 's', {_meta:{}})`,
+        v.schema({_meta:{}}, 's', {_meta:{}})).is(true);
+    et(`v.err`, v.err).is(null);
 
     // Schema invalid, value properties are never allowed to be `null`.
     et(`v.schema({BOOL:{fallback:null,kind:'boolean'}, _meta:{}}, 's')`,

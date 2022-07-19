@@ -27,7 +27,7 @@ export default function class_(value, name, schema) {
     // Check that the `schema` argument is correct.
     // @TODO optionally bypass this, when performance is important
     const isCorrect = this.schema(schema, 'schema');
-    if (! isCorrect) throw Error(`Validate.object() incorrectly invoked: ${this.err}`);
+    if (! isCorrect) throw Error(`Validate.class() incorrectly invoked: ${this.err}`);
 
     // Validate `value` against the `schema`.
     if (! this._validateAgainstSchema(value, name, schema)) return false;
