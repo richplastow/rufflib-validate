@@ -2,7 +2,7 @@
 
 __A RuffLIB library for succinctly validating JavaScript values.__
 
-▶&nbsp; __Version:__ 1.3.0  
+▶&nbsp; __Version:__ 2.0.0  
 ▶&nbsp; __Homepage:__ <https://richplastow.com/rufflib-validate>  
 ▶&nbsp; __NPM:__ <https://www.npmjs.com/package/rufflib-validate>  
 ▶&nbsp; __Repo:__ <https://github.com/richplastow/rufflib-validate>  
@@ -33,7 +33,7 @@ Run the test suite in ‘src/’, while working on this library:
 `npm test --src`  
 `npm start --src --open --test`  
 
-Build the minified and unminified bundles, using settings in rollup.config.js:  
+Build the minified and unminified bundles in ‘dist/’ and ‘docs/’:  
 `npm run build`
 
 Run the test suite in ‘docs/’, after a build:  

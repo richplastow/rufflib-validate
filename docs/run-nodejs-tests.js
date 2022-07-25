@@ -4,7 +4,7 @@
 
 import Expect from 'rufflib-expect';
 import Validate from './dist/rufflib-validate.es.js';
-import validateTest from './dist/rufflib-validate-test.es.js';
+import validateTest from './test/rufflib-validate-test.es.js';
 
 // `npm test --full` means we should show full test results.
 const showFullResults = !! process.env.npm_config_full;

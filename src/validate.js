@@ -6,7 +6,7 @@
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '1.3.0';
+const VERSION = '2.0.0';
 
 import _type from './methods/_type.js';
 import _validateAgainstSchema from './methods/_validate-against-schema.js';

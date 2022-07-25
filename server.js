@@ -38,8 +38,8 @@ const server = http.createServer((req, res) => {
     // Set up the file-stream reader for this request.
     // This usually points to a file in 'docs/' or 'src/', but sometimes
     // '<script type="importmap">' needs access to 'node_modules/'.
-    const rufflibExpectProxy = url.includes('__rufflib-expect-docs-dist__')
-        ? `node_modules/rufflib-expect/docs/dist/${url.split('/').pop()}`
+    const rufflibExpectProxy = url.includes('__rufflib-expect-dist__')
+        ? `node_modules/rufflib-expect/dist/${url.split('/').pop()}`
         : false;
     const readStream = fs.createReadStream(
         rufflibExpectProxy || `${dir}${url}`);

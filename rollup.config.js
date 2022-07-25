@@ -20,15 +20,15 @@ export default [
         input: 'src/entry-point-main.js',
         output: {
             banner,
-            file: 'docs/dist/rufflib-validate.es.js',
-            format: 'es', // eg for `node docs/run-nodejs-tests.js`
+            file: 'dist/rufflib-validate.es.js', // a copy of this is used by...
+            format: 'es', // ...`docs/run-nodejs-tests.js`
         }
     },
     {
-        input: 'docs/dist/rufflib-validate.es.js',
+        input: 'dist/rufflib-validate.es.js',
         output: {
-            file: 'docs/dist/rufflib-validate.umd.es5.min.js',
-            format: 'umd', // eg for `docs/index.html` in legacy browsers
+            file: 'dist/rufflib-validate.umd.es5.min.js', // a copy of this is used by...
+            format: 'umd', // ...`docs/run-browser-tests.html`
             name: 'rufflib.validate.main', // `var Validate = rufflib.validate.main`
         },
         // See https://babeljs.io/docs/en/babel-preset-env
@@ -39,30 +39,30 @@ export default [
         ]
     },
 
-    // Build unit test distribution files.
+    // Build unit test files.
     {
         input: 'src/entry-point-for-tests.js',
         output: {
             banner: banner.replace(' * ', ' * Unit tests for '),
-            file: 'docs/dist/rufflib-validate-test.es.js',
-            format: 'es', // eg for `node docs/run-nodejs-tests.js`
+            file: 'docs/test/rufflib-validate-test.es.js', // this is used by...
+            format: 'es', // ...`docs/run-nodejs-tests.js`
         }
     },
     {
-        input: 'docs/dist/rufflib-validate-test.es.js',
+        input: 'docs/test/rufflib-validate-test.es.js',
         output: {
-            file: 'docs/dist/rufflib-validate-test.umd.js',
-            format: 'umd', // eg for `docs/run-browser-tests.html` in legacy browsers
+            file: 'docs/test/rufflib-validate-test.umd.js', // this is used by...
+            format: 'umd', // ...`docs/run-browser-tests.html` in legacy browsers
             name: 'rufflib.validate.test' // `rufflib.validate.test(expect, Validate)`
         },
         // See https://babeljs.io/docs/en/babel-preset-env
         plugins: [
             babel({ babelHelpers: 'bundled' }),
             copy({
+                outputFolder: 'docs/test',
                 targets: [
-                    'node_modules/rufflib-expect/docs/dist/rufflib-expect.umd.es5.min.js',
-                ],
-                outputFolder: 'docs/lib'
+                    'node_modules/rufflib-expect/dist/rufflib-expect.umd.es5.min.js',
+                ]
             })
         ]
     }

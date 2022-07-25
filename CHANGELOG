@@ -12,3 +12,6 @@ adds the class() method
 
 20220719^RP 1.3.0
 adds the metaSchema argument to schema()
+
+20220725^RP 2.0.0
+moves dist files and slims NPM package (breaking change)
