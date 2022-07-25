@@ -1,6 +1,6 @@
 {
     "name": "rufflib-validate",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "A RuffLIB library for succinctly validating JavaScript values.",
     "main": "dist/rufflib-validate.es.js",
     "type": "module",
