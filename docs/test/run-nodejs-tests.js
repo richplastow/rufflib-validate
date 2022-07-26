@@ -1,10 +1,10 @@
-// rufflib-validate/src/run-nodejs-tests.js
+// rufflib-validate/src/docs/test/run-nodejs-tests.js
 
 /* ----------------------------- Imports and Env ---------------------------- */
 
 import Expect from 'rufflib-expect';
-import Validate from './main.js';
-import validateTest from './main-test.js';
+import Validate from '../../main.js';
+import validateTest from '../../main-test.js';
 
 // `npm test --full` means we should show full test results.
 const showFullResults = !! process.env.npm_config_full;

@@ -1,10 +1,10 @@
-// rufflib-validate/docs/run-nodejs-tests.js
+// rufflib-validate/src/docs/test/run-nodejs-tests.js
 
 /* ----------------------------- Imports and Env ---------------------------- */
 
 import Expect from 'rufflib-expect';
-import Validate from './dist/rufflib-validate.es.js';
-import validateTest from './test/rufflib-validate-test.es.js';
+import Validate from '../../main.js';
+import validateTest from '../../main-test.js';
 
 // `npm test --full` means we should show full test results.
 const showFullResults = !! process.env.npm_config_full;
@@ -20,7 +20,7 @@ if (Validate.VERSION !== process.env.npm_package_version) throw Error(
     `Validate.VERSION '${Validate.VERSION}' !== package.json version`);
 
 // Run the test suite.
-const expect = new Expect('Validate Test Suite (dist, NodeJS)');
+const expect = new Expect('Validate Test Suite (src, NodeJS)');
 validateTest(expect, Validate);
 
 // Display the results.

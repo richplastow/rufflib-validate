@@ -1,8 +1,6 @@
 // Configuration, used by `rollup -c` during `npm run build`.
 
-import { homepage, description, license, name, version }
-    from './package.json';
-import copy from 'rollup-plugin-copy';
+import { homepage, description, license, name, version } from './package.json';
 import { babel } from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 
@@ -21,14 +19,14 @@ export default [
         output: {
             banner,
             file: 'dist/rufflib-validate.es.js', // a copy of this is used by...
-            format: 'es', // ...`docs/run-nodejs-tests.js`
+            format: 'es', // ...`docs/test/run-nodejs-tests.js`
         }
     },
     {
         input: 'dist/rufflib-validate.es.js',
         output: {
             file: 'dist/rufflib-validate.umd.es5.min.js', // a copy of this is used by...
-            format: 'umd', // ...`docs/run-browser-tests.html`
+            format: 'umd', // ...`docs/test/run-browser-tests.html`
             name: 'rufflib.validate.main', // `var Validate = rufflib.validate.main`
         },
         // See https://babeljs.io/docs/en/babel-preset-env
@@ -45,26 +43,18 @@ export default [
         output: {
             banner: banner.replace(' * ', ' * Unit tests for '),
             file: 'docs/test/rufflib-validate-test.es.js', // this is used by...
-            format: 'es', // ...`docs/run-nodejs-tests.js`
+            format: 'es', // ...`docs/test/run-nodejs-tests.js`
         }
     },
     {
         input: 'docs/test/rufflib-validate-test.es.js',
         output: {
             file: 'docs/test/rufflib-validate-test.umd.js', // this is used by...
-            format: 'umd', // ...`docs/run-browser-tests.html` in legacy browsers
+            format: 'umd', // ...`docs/test/run-browser-tests.html` in legacy browsers
             name: 'rufflib.validate.test' // `rufflib.validate.test(expect, Validate)`
         },
         // See https://babeljs.io/docs/en/babel-preset-env
-        plugins: [
-            babel({ babelHelpers: 'bundled' }),
-            copy({
-                outputFolder: 'docs/test',
-                targets: [
-                    'node_modules/rufflib-expect/dist/rufflib-expect.umd.es5.min.js',
-                ]
-            })
-        ]
+        plugins: [babel({ babelHelpers: 'bundled' })]
     }
 
 ];

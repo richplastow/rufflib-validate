@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<script>window.RUFFLIB_ENV='public'</script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height,
+        initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/gif" sizes="32x32" href="../img/icon/favicon-32x32.gif">
+    <link rel="icon" type="image/gif" sizes="16x16" href="../img/icon/favicon-16x16.gif">
+    <link rel="icon" type="image/gif" sizes="192x192" href="../img/icon/favicon-192x192.gif">
+    <link rel="shortcut icon" href="../img/icon/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="RuffLIB Validate | Demo 1">
+    <meta name="application-name" content="RuffLIB Validate | Demo 1">
+    <meta name="theme-color" content="#000000">
+    <title>RuffLIB Validate | Tests</title>
+    <style>
+        body{color:#eee;font:10px/2 Verdana,Arial;text-align:center}
+        @media screen and (min-width:450px){body{font-size:15px}}
+        body{padding:9px;min-width:282px;background:#000}
+        pre,a{padding:4px 8px;border-radius:4px;text-decoration:none}
+        pre{margin:9px;text-align:left}
+        #err{padding:0 8px;background:#491f31;color:#fbb}
+    </style>
+</head>
+<body>
+    <pre id="err"></pre><script>window.onerror=function(m,s,l,c){if(-1==m.indexOf(
+    'start with “./”'))document.getElementById('err').innerHTML+=m+'\n    '+s
+    +':'+l+':'+c+'\n'} // Firefox has a spurious 'start with “./”' error</script>
+
+    <nav><a class="btn" href="../index.html">RuffLIB Validate</a></nav>
+    <h2>RuffLIB Validate | Tests</h2>
+    <div id="test-output">Loading...</div>
+
+    <script>!function(d){
+
+        // Use production code or development code, depending on the environment.
+        if (window.RUFFLIB_ENV === 'public')
+            genPublicScripts()
+        else
+            genSourceScripts();
+
+        // Generates a <SCRIPT> element, and appends it to the <BODY>.
+        function genScript(o) { // options
+            var $s = d.createElement('script');
+            if (o.async) $s.setAttribute('async', 'async');
+            if (o.src)   $s.setAttribute('src', o.src);
+            if (o.type)  $s.setAttribute('type', o.type);
+            if (o.code)  $s.innerHTML = o.code.join('\n');
+            d.body.appendChild($s);
+        }
+
+        // Generates four scripts designed to run in the public folder.
+        // This is production code, which may need to run in legacy browsers.
+        function genPublicScripts() {
+
+            // <script src="../dist/rufflib-validate.umd.es5.min.js" />
+            genScript({ src:'../dist/rufflib-validate.umd.es5.min.js' });
+
+            // <script src="rufflib-expect.umd.es5.min.js" />
+            genScript({ src:'rufflib-expect.umd.es5.min.js' });
+
+            // <script src="rufflib-validate-test.umd.js" />
+            genScript({ src:'rufflib-validate-test.umd.js' });
+
+            // <script>!function(){ var Expect = rufflib.expect.main; ...
+            genScript({ code:[
+                "!function(){",
+                "    var clear = setInterval(function() {",
+                "        if (window.rufflib && rufflib.expect && rufflib.expect.main && rufflib.validate && rufflib.validate.main && rufflib.validate.test) {",
+                "            clearInterval(clear);",
+                "            init();",
+                "        }",
+                "    }, 10);",
+                "    function init(){",
+                "        var Expect = rufflib.expect.main;",
+                "        var Validate = rufflib.validate.main;",
+                "        var validateTest = rufflib.validate.test;",
+                "",
+                "        // Generate the <STYLE> element.",
+                "        var $css = document.createElement('style');",
+                "        $css.innerHTML = Expect.generateCss('body', '#test-output');",
+                "        document.head.appendChild($css);",
+                "",
+                "        // Run the test suite.",
+                "        var expect = new Expect('Validate Test Suite (dist, browser)');",
+                "        validateTest(expect, Validate);",
+                "",
+                "        // Display the results.",
+                "        document.body.classList.add(expect.status);",
+                "        document.querySelector('#test-output').innerHTML =",
+                "            expect.render('Html', '', true);",
+                "    }",
+                "}()"
+            ]});
+
+        }
+
+        // Generates three scripts designed to run in the source folder.
+        // This is only used during development, and assumes a modern browser.
+        function genSourceScripts() {
+
+            // <script async src="../shims/es-module-shims.js" />
+            genScript({ async:true, src:'../shims/es-module-shims.js' });
+
+            // <script type="importmap">{ "imports": { ...
+            genScript({ type:'importmap', code:[
+                '{',
+                '    "imports": {',
+                '        "Expect": "./__rufflib-expect-dist__/rufflib-expect.es.js",',
+                '        "Validate": "../__src__/main.js",',
+                '        "validateTest": "../__src__/main-test.js"',
+                '    }',
+                '}',
+            ]});
+
+            // <script type="module"> import Expect from 'Expect'; ...
+            genScript({ type:'module', code:[
+                "import Expect from 'Expect';",
+                "import Validate from 'Validate';",
+                "import validateTest from 'validateTest';",
+                "",
+                "// Generate the <STYLE> element.",
+                "const $css = document.createElement('style');",
+                "$css.innerHTML = Expect.generateCss('body', '#test-output');",
+                "document.head.appendChild($css);",
+                "",
+                "// Run the test suite.",
+                "const expect = new Expect('Validate Test Suite (src, browser)');",
+                "validateTest(expect, Validate);",
+                "",
+                "// Display the results.",
+                "document.body.classList.add(expect.status);",
+                "document.querySelector('#test-output').innerHTML =",
+                "    expect.render('Html', '', true);",
+            ]});
+
+        }
+
+    }(document)</script>
+
+</body>
+</html>
