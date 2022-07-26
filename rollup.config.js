@@ -17,7 +17,7 @@ export default [
 
     // Build Validate’s distribution files. Tree-shaking should remove all tests.
     {
-        input: 'src/entry-point-main.js',
+        input: 'src/main.js',
         output: {
             banner,
             file: 'dist/rufflib-validate.es.js', // a copy of this is used by...
@@ -41,7 +41,7 @@ export default [
 
     // Build unit test files.
     {
-        input: 'src/entry-point-for-tests.js',
+        input: 'src/main-test.js',
         output: {
             banner: banner.replace(' * ', ' * Unit tests for '),
             file: 'docs/test/rufflib-validate-test.es.js', // this is used by...

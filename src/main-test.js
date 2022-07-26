@@ -1,4 +1,5 @@
-// rufflib-validate/src/entry-point-for-tests.js
+// rufflib-validate/src/main-test.js
+// (compare with rufflib-validate/main-test.js)
 
 // Entry point for running the unit tests in Validate’s source files.
 // Also used for building Validate’s unit test distribution files.

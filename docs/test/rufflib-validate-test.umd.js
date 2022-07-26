@@ -55,7 +55,7 @@
   }
 
   /**
-   * Unit tests for rufflib-validate 2.0.1
+   * Unit tests for rufflib-validate 2.0.2
    * A RuffLIB library for succinctly validating JavaScript values.
    * https://richplastow.com/rufflib-validate
    * @license MIT
@@ -3168,7 +3168,7 @@
 
 
   var NAME = 'Validate';
-  var VERSION = '2.0.1';
+  var VERSION = '2.0.2';
   /* ---------------------------------- Tests --------------------------------- */
   // Runs basic tests on Validate.
 
@@ -3202,7 +3202,7 @@
     et("sayOk(3)", sayOk(3)).is("sayOk(): 'n' 3 is < 100");
     et('sayOk(3, true) // test that the `skip` argument is working', sayOk(3, true)) // @TODO test that skip works with all methods
     .is('ok!');
-  } // rufflib-validate/src/entry-point-for-tests.js
+  } // rufflib-validate/src/main-test.js
   // Run each test. You can comment-out some during development, to help focus on
   // individual tests. But make sure all tests are uncommented before committing.
 

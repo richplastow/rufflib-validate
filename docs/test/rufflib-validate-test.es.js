@@ -1,5 +1,5 @@
 /**
- * Unit tests for rufflib-validate 2.0.1
+ * Unit tests for rufflib-validate 2.0.2
  * A RuffLIB library for succinctly validating JavaScript values.
  * https://richplastow.com/rufflib-validate
  * @license MIT
@@ -1507,7 +1507,7 @@ function test$1(expect, Validate) {
 /* --------------------------------- Import --------------------------------- */
 
 const NAME = 'Validate';
-const VERSION = '2.0.1';
+const VERSION = '2.0.2';
 
 
 /* ---------------------------------- Tests --------------------------------- */
@@ -1553,7 +1553,7 @@ function test(expect, Validate) {
 
 }
 
-// rufflib-validate/src/entry-point-for-tests.js
+// rufflib-validate/src/main-test.js
 
 // Run each test. You can comment-out some during development, to help focus on
 // individual tests. But make sure all tests are uncommented before committing.

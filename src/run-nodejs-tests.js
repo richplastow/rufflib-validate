@@ -3,8 +3,8 @@
 /* ----------------------------- Imports and Env ---------------------------- */
 
 import Expect from 'rufflib-expect';
-import Validate from './entry-point-main.js';
-import validateTest from './entry-point-for-tests.js';
+import Validate from './main.js';
+import validateTest from './main-test.js';
 
 // `npm test --full` means we should show full test results.
 const showFullResults = !! process.env.npm_config_full;

@@ -3,6 +3,7 @@
 .vscode
 babel.config.json
 docs
+main-test.js
 node_modules
 rollup.config.js
 server.js
