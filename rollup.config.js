@@ -18,15 +18,15 @@ export default [
         input: 'src/main.js',
         output: {
             banner,
-            file: 'dist/rufflib-validate.es.js', // a copy of this is used by...
-            format: 'es', // ...`docs/test/run-nodejs-tests.js`
+            file: 'dist/rufflib-validate.es.js',
+            format: 'es',
         }
     },
     {
         input: 'dist/rufflib-validate.es.js',
         output: {
-            file: 'dist/rufflib-validate.umd.es5.min.js', // a copy of this is used by...
-            format: 'umd', // ...`docs/test/run-browser-tests.html`
+            file: 'dist/rufflib-validate.umd.es5.min.js',
+            format: 'umd',
             name: 'rufflib.validate.main', // `var Validate = rufflib.validate.main`
         },
         // See https://babeljs.io/docs/en/babel-preset-env
@@ -42,15 +42,15 @@ export default [
         input: 'src/main-test.js',
         output: {
             banner: banner.replace(' * ', ' * Unit tests for '),
-            file: 'docs/test/rufflib-validate-test.es.js', // this is used by...
-            format: 'es', // ...`docs/test/run-nodejs-tests.js`
+            file: 'docs/test/rufflib-validate-test.es.js',
+            format: 'es',
         }
     },
     {
         input: 'docs/test/rufflib-validate-test.es.js',
         output: {
-            file: 'docs/test/rufflib-validate-test.umd.js', // this is used by...
-            format: 'umd', // ...`docs/test/run-browser-tests.html` in legacy browsers
+            file: 'docs/test/rufflib-validate-test.umd.js',
+            format: 'umd',
             name: 'rufflib.validate.test' // `rufflib.validate.test(expect, Validate)`
         },
         // See https://babeljs.io/docs/en/babel-preset-env

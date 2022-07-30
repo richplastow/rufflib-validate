@@ -1,14 +1,14 @@
 {
     "name": "rufflib-validate",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "description": "A RuffLIB library for succinctly validating JavaScript values.",
     "main": "main.js",
     "type": "module",
     "scripts": {
         "build": "npm run clean && rollup -c && npm run build:css && npm run build:module && npm run build:static",
         "build:css": "node scripts/build-css.js",
-        "build:module": "cp node_modules/rufflib-expect/dist/rufflib-expect.umd.es5.min.js docs/test",
-        "build:static": "cp -r {dist,src/docs/{index.html,img,test}} docs",
+        "build:module": "cp node_modules/rufflib-expect/dist/rufflib-expect.{umd.es5.min,es}.js docs/test",
+        "build:static": "cp -r {dist,src/docs/{index.html,img,shims,test}} docs",
         "clean": "rm -r dist ||:; rm -r docs ||:",
         "test:dist": "node docs/test/run-nodejs-tests.js # test dist/ using NodeJS",
         "test:src": "node src/docs/test/run-nodejs-tests.js # test src/ using NodeJS",
@@ -34,6 +34,6 @@
         "@rollup/plugin-babel": "^5.3.1",
         "csso": "^5.0.4",
         "rollup-plugin-terser": "^7.0.2",
-        "rufflib-expect": "^3.0.0"
+        "rufflib-expect": "^3.0.3"
     }
 }

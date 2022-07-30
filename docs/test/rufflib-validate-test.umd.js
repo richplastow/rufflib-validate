@@ -55,7 +55,7 @@
   }
 
   /**
-   * Unit tests for rufflib-validate 2.0.3
+   * Unit tests for rufflib-validate 2.0.4
    * A RuffLIB library for succinctly validating JavaScript values.
    * https://richplastow.com/rufflib-validate
    * @license MIT
@@ -3168,7 +3168,7 @@
 
 
   var NAME = 'Validate';
-  var VERSION = '2.0.3';
+  var VERSION = '2.0.4';
   /* ---------------------------------- Tests --------------------------------- */
   // Runs basic tests on Validate.
 

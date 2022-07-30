@@ -2,7 +2,7 @@
 
 __A RuffLIB library for succinctly validating JavaScript values.__
 
-▶&nbsp; __Version:__ 2.0.3  
+▶&nbsp; __Version:__ 2.0.4  
 ▶&nbsp; __Homepage:__ <https://richplastow.com/rufflib-validate>  
 ▶&nbsp; __NPM:__ <https://www.npmjs.com/package/rufflib-validate>  
 ▶&nbsp; __Repo:__ <https://github.com/richplastow/rufflib-validate>  
@@ -29,7 +29,7 @@ sayOk(3, true); // ok! (less safe, but faster)
 
 ## Dev, Test and Build
 
-Run the test suite in ‘src/’, while working on this library:  
+Run the test suite in ‘src/docs/’, while working on this library:  
 `npm test --src`  
 `npm start --src --open --test`  
 
